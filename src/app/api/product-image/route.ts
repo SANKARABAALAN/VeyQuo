@@ -10,10 +10,13 @@ function cleanQuery(q: string) {
   cleaned = cleaned.replace(/\d+\s*(gb|tb|mb|ram)\s*\/\s*\d+\s*(gb|tb|mb)/gi, '');
   cleaned = cleaned.replace(/\d+\s*(gb|tb|mb|ram)/gi, '');
   
-  // 3. Remove noise words
+  // 3. Remove "unknown" and "generic"
+  cleaned = cleaned.replace(/\b(unknown|generic)\b/gi, '');
+  
+  // 4. Remove noise words
   cleaned = cleaned.replace(/\b(crawled|specs|compare|variant|high performance|starting at|starting|smartphones|laptops|refrigerators|washing machines|smartwatches|earbuds|wireless earbuds|earphones|tvs|tv|televisions|shoes|true wireless)\b/gi, '');
 
-  // 4. Remove special characters and clean spacing
+  // 5. Remove special characters and clean spacing
   cleaned = cleaned.replace(/[^a-zA-Z0-9\s-]/g, ' ');
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
 
@@ -62,14 +65,14 @@ export async function GET(request: Request) {
 
   const fallbackRedirect = (q: string) => {
     const lowerTitle = q.toLowerCase();
+    if (lowerTitle.includes('headphone') || lowerTitle.includes('earbud') || lowerTitle.includes('earphone')) {
+      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80';
+    }
     if (lowerTitle.includes('phone') || lowerTitle.includes('iphone')) {
       return 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&q=80';
     }
     if (lowerTitle.includes('laptop') || lowerTitle.includes('macbook')) {
       return 'https://images.unsplash.com/photo-1496181130204-7552cc14ac4b?w=300&q=80';
-    }
-    if (lowerTitle.includes('headphone') || lowerTitle.includes('earbud') || lowerTitle.includes('earphone')) {
-      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80';
     }
     return 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=300&q=80';
   };

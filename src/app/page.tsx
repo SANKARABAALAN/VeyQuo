@@ -278,6 +278,9 @@ export default function Home() {
   const [savedComparisons, setSavedComparisons] = useState<any[]>([]);
   const [isSavingComparison, setIsSavingComparison] = useState(false);
   const [watchlistTargetPrice, setWatchlistTargetPrice] = useState('');
+  
+  // Cart/Saved Deals states
+  const [cart, setCart] = useState<any[]>([]);
 
   // AI assistant chat widget states
   const [chatOpen, setChatOpen] = useState(false);
@@ -290,7 +293,33 @@ export default function Home() {
   useEffect(() => {
     fetchWatchlist();
     fetchSavedComparisons();
+    // Load cart from localStorage
+    const localCart = localStorage.getItem('veyquo_cart');
+    if (localCart) {
+      try {
+        setCart(JSON.parse(localCart));
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }, []);
+
+  const handleAddToCart = (listing: any) => {
+    if (cart.some(item => item.id === listing.id)) {
+      alert("This deal is already saved in your Cart!");
+      return;
+    }
+    const updatedCart = [...cart, { ...listing, savedAt: new Date().toISOString() }];
+    setCart(updatedCart);
+    localStorage.setItem('veyquo_cart', JSON.stringify(updatedCart));
+    alert("Deal saved to Cart!");
+  };
+
+  const handleRemoveFromCart = (id: string) => {
+    const updatedCart = cart.filter(item => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem('veyquo_cart', JSON.stringify(updatedCart));
+  };
 
   const fetchWatchlist = async () => {
     try {
@@ -355,60 +384,129 @@ export default function Home() {
   };
 
   // Compare Option 1: Pick top 10 products and score them
-  const handleCompareWithProducts = () => {
+  const handleCompareWithProducts = async () => {
     if (!result || !selectedProduct) return;
     setCompareMode('products');
+    setLoading(true);
 
-    // Aggregate the best listings from the first 10 variants in results
-    const topVariants = result.variants.slice(0, 10);
-    const listingsToCompare = topVariants.map((v, idx) => {
-      // Find the highest scoring listing for each variant
-      const bestList = v.listings[0] || {
-        price: 5000 + idx * 1200,
-        deliveryFee: idx % 2 === 0 ? 0 : 99,
-        discount: 0,
-        condition: 'NEW',
-        warranty: '1 Year Brand Warranty',
-        sellerRating: 4.5,
-        sellerName: 'Authorized Retailer'
-      };
+    let listingsToCompare: any[] = [];
+    try {
+      // Aggregate the best listings from the first 10 variants in results
+      const topVariants = result.variants.slice(0, 10);
+      listingsToCompare = topVariants.map((v, idx) => {
+        // Find the highest scoring listing for each variant
+        const bestList = v.listings[0] || {
+          price: 5000 + idx * 1200,
+          deliveryFee: idx % 2 === 0 ? 0 : 99,
+          discount: 0,
+          condition: 'NEW',
+          warranty: '1 Year Brand Warranty',
+          sellerRating: 4.5,
+          sellerName: 'Authorized Retailer',
+          specifications: []
+        };
 
-      const basePrice = bestList.price;
-      const deliveryFee = bestList.deliveryFee || 0;
-      const effectivePrice = basePrice + deliveryFee;
+        const basePrice = bestList.price;
+        const deliveryFee = bestList.deliveryFee || 0;
+        const effectivePrice = basePrice + deliveryFee;
 
-      return {
-        id: `prod-${v.id}-${idx}`,
-        title: v.name,
-        brand: v.brand,
-        price: basePrice,
-        deliveryFee,
-        effectivePrice,
-        sellerRating: bestList.sellerRating || 4.5,
-        warranty: bestList.warranty || '1 Year',
-        deliveryText: deliveryFee === 0 ? 'Free' : `₹${deliveryFee}`,
-        condition: bestList.condition || 'NEW'
-      };
-    });
+        return {
+          id: `prod-${v.id}-${idx}`,
+          title: v.name,
+          brand: v.brand,
+          price: basePrice,
+          deliveryFee,
+          effectivePrice,
+          sellerRating: bestList.sellerRating || 4.5,
+          warranty: bestList.warranty || '1 Year',
+          deliveryText: deliveryFee === 0 ? 'Free' : `₹${deliveryFee}`,
+          condition: bestList.condition || 'NEW',
+          specifications: bestList.specifications || v.specifications || []
+        };
+      });
 
-    // Score listings based on weights
-    const maxPrice = Math.max(...listingsToCompare.map(l => l.effectivePrice));
-    const minPrice = Math.min(...listingsToCompare.map(l => l.effectivePrice));
+      // Score listings based on weights
+      const maxPrice = Math.max(...listingsToCompare.map(l => l.effectivePrice));
+      const minPrice = Math.min(...listingsToCompare.map(l => l.effectivePrice));
 
-    const scored = listingsToCompare.map(l => {
-      const priceScore = maxPrice === minPrice ? 1.0 : 1.0 - ((l.effectivePrice - minPrice) / (maxPrice - minPrice));
-      const ratingScore = l.sellerRating / 5.0;
-      const totalScore = parseFloat((priceScore * 0.6 + ratingScore * 0.4).toFixed(2));
+      const scored = listingsToCompare.map(l => {
+        const priceScore = maxPrice === minPrice ? 1.0 : 1.0 - ((l.effectivePrice - minPrice) / (maxPrice - minPrice));
+        const ratingScore = l.sellerRating / 5.0;
 
-      return { ...l, score: totalScore };
-    });
+        // Compute actual spec score
+        let specScore = 0.5;
+        const ramSpec = l.specifications?.find((s: any) => s.key?.toLowerCase() === 'ram');
+        const storageSpec = l.specifications?.find((s: any) => s.key?.toLowerCase() === 'storage');
+        let specSum = 0;
+        let specCount = 0;
+        if (ramSpec) {
+          specCount++;
+          const val = parseInt(ramSpec.value || ramSpec.normalizedValue || '0');
+          if (val >= 16) specSum += 1.0;
+          else if (val >= 8) specSum += 0.7;
+          else specSum += 0.4;
+        }
+        if (storageSpec) {
+          specCount++;
+          const val = parseInt(storageSpec.value || storageSpec.normalizedValue || '0');
+          if (val >= 1024) specSum += 1.0;
+          else if (val >= 512) specSum += 0.9;
+          else if (val >= 256) specSum += 0.7;
+          else specSum += 0.5;
+        }
+        if (specCount > 0) {
+          specScore = specSum / specCount;
+        }
 
-    scored.sort((a, b) => b.score - a.score);
-    setComparisonListings(scored);
+        // Compute actual warranty score
+        const warrantyMonths = l.warranty?.includes('Month') ? parseInt(l.warranty) : (l.warranty?.includes('Year') ? parseInt(l.warranty) * 12 : 12);
+        const warrantyScore = Math.min(1.0, (warrantyMonths || 12) / 24.0);
 
-    const winner = scored[0];
-    setAiRecommendation(`🏆 **${winner.title}** is selected as the Best Overall Product for you.\n\nIt offers the best balance with an effective price of **₹${winner.effectivePrice.toLocaleString()}**, high seller rating of **${winner.sellerRating} ⭐**, and **${winner.warranty}** protection.`);
-    setActiveTab('compare');
+        // Compute actual condition score
+        const conditionScore = l.condition === 'NEW' ? 1.0 : (l.condition === 'REFURBISHED' ? 0.7 : 0.4);
+
+        const totalWeights = Object.values(weights).reduce((a, b) => a + b, 0) || 1.0;
+        const totalScore = parseFloat((
+          (priceScore * weights.priceWeight +
+          ratingScore * weights.sellerWeight +
+          specScore * weights.specificationWeight +
+          warrantyScore * weights.warrantyWeight +
+          conditionScore * weights.conditionWeight) / totalWeights
+        ).toFixed(2));
+
+        return { ...l, score: totalScore };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      setComparisonListings(scored);
+
+      // Fetch dynamic AI analysis mapping specs to cost
+      const res = await fetch('/api/compare/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listings: scored,
+          query: result?.intent.rawInput || selectedProduct.name,
+          weights
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAiRecommendation(data.summary);
+      } else {
+        const winner = scored[0];
+        setAiRecommendation(`🏆 **${winner.title}** is selected as the Best Overall Product for you.\n\nIt offers the best balance with an effective price of **₹${winner.effectivePrice.toLocaleString()}**, high seller rating of **${winner.sellerRating} ⭐**, and **${winner.warranty}** protection.`);
+      }
+      setActiveTab('compare');
+    } catch (e) {
+      console.error("Comparison analysis error:", e);
+      const winner = listingsToCompare[0];
+      setAiRecommendation(`🏆 **${winner.title}** is selected as the Best Overall Product.\n\nIt offers an effective price of **₹${winner.effectivePrice.toLocaleString()}** and **${winner.warranty}** protection.`);
+      setActiveTab('compare');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Compare Option 2: Platform deals compare (Amazon vs Flipkart vs OLX vs Croma)
@@ -1090,15 +1188,24 @@ export default function Home() {
                                 </span>
                               </td>
                               <td className="py-4 text-right">
-                                <a 
-                                  href={listing.url || `https://www.google.com/search?q=${encodeURIComponent(listing.title || selectedProduct.name)}`}
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 bg-[#c0c1ff]/10 hover:bg-[#c0c1ff] border border-[#c0c1ff]/20 text-[#c0c1ff] hover:text-[#1000a9] px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"
-                                >
-                                  Buy Now
-                                  <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                                </a>
+                                <div className="inline-flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleAddToCart(listing)}
+                                    className="inline-flex items-center gap-1.5 bg-white/5 hover:bg-[#c0c1ff]/20 border border-white/10 hover:border-[#c0c1ff]/30 text-white hover:text-[#c0c1ff] px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer"
+                                  >
+                                    <span className="material-symbols-outlined text-[14px]">shopping_cart</span>
+                                    Save Deal
+                                  </button>
+                                  <a 
+                                    href={listing.url || `https://www.google.com/search?q=${encodeURIComponent(listing.title || selectedProduct.name)}`}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 bg-[#c0c1ff]/10 hover:bg-[#c0c1ff] border border-[#c0c1ff]/20 text-[#c0c1ff] hover:text-[#1000a9] px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"
+                                  >
+                                    Buy Now
+                                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                  </a>
+                                </div>
                               </td>
                             </tr>
                           );
@@ -1113,92 +1220,171 @@ export default function Home() {
           </div>
         )}
 
-        {/* VIEW 5: WATCHLIST */}
+        {/* VIEW 5: WATCHLIST & CART */}
         {activeTab === 'watchlist' && (
           <div className="px-8 py-8 flex-grow max-w-7xl mx-auto w-full animate-fade-in">
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-white tracking-tight">Active Watchlist</h1>
-              <p className="text-xs text-[#c7c4d7] mt-1 font-semibold uppercase tracking-wider">Tracking {watchlist.length} items across e-commerce databases</p>
+              <h1 className="text-3xl font-bold text-white tracking-tight">Watchlist & Saved Deals</h1>
+              <p className="text-xs text-[#c7c4d7] mt-1 font-semibold uppercase tracking-wider">
+                Tracking {watchlist.length} price alerts and {cart.length} saved offers in cart
+              </p>
             </header>
 
-            {watchlist.length === 0 ? (
-              <div className="glass-card rounded-2xl p-10 text-center py-20">
-                <span className="material-symbols-outlined text-5xl text-[#908fa0] mb-4">visibility</span>
-                <h3 className="text-xl font-bold text-white mb-1">Your Watchlist is empty</h3>
-                <p className="text-xs text-[#c7c4d7]">Configure target thresholds in comparison cards to setup alerts.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {watchlist.map((item) => {
-                  const score = item.variant.bestScore || 85;
-                  const strokeOffset = 283 - (283 * (score / 100));
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column: Watchlist (Price Alerts) */}
+              <div className="glass-card rounded-3xl p-6 border border-white/5 bg-[#121315]/30">
+                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#ffb783]">notifications_active</span>
+                  Price Alerts ({watchlist.length})
+                </h2>
 
-                  return (
-                    <div 
-                      key={item.id} 
-                      className="glass-card rounded-2xl p-6 flex flex-col group hover:border-[#c0c1ff]/30 transition-all duration-500"
-                    >
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-[#0d0e10] flex items-center justify-center relative">
-                          <img 
-                            src={getProductImage(item.variant.name)} 
-                            alt={item.variant.name} 
-                            className="w-full h-full object-cover" 
-                          />
-                        </div>
-                        
-                        <div className="flex flex-col items-end">
-                          <span className="text-[9px] font-bold text-[#ffb783] uppercase tracking-wider mb-1">VEYQUO Score</span>
-                          <div className="relative w-12 h-12 flex items-center justify-center">
-                            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                              <circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
-                              <circle 
-                                className="zuno-score-arc" 
-                                cx="50" 
-                                cy="50" 
-                                fill="none" 
-                                r="45" 
-                                stroke="#c0c1ff" 
-                                strokeLinecap="round" 
-                                strokeWidth="6" 
-                                strokeDasharray="283"
-                                strokeDashoffset={strokeOffset}
-                              />
-                            </svg>
-                            <span className="absolute text-xs font-black text-[#c0c1ff]">{score}</span>
+                {watchlist.length === 0 ? (
+                  <div className="glass-card rounded-2xl p-6 text-center py-12 border border-dashed border-white/5 bg-[#0d0e10]/20">
+                    <span className="material-symbols-outlined text-4xl text-[#908fa0] mb-3">visibility</span>
+                    <h3 className="text-sm font-bold text-white mb-1">Your Watchlist is empty</h3>
+                    <p className="text-[11px] text-[#908fa0]">Configure target thresholds in product details to set alerts.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {watchlist.map((item) => {
+                      const score = item.variant.bestScore || 85;
+                      const strokeOffset = 283 - (283 * (score / 100));
+
+                      return (
+                        <div 
+                          key={item.id} 
+                          className="glass-card rounded-2xl p-4 flex gap-4 group hover:border-[#c0c1ff]/30 transition-all duration-300 bg-[#0d0e10]/30"
+                        >
+                          <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 bg-[#0d0e10] flex items-center justify-center relative shrink-0">
+                            <img 
+                              src={getProductImage(item.variant.name)} 
+                              alt={item.variant.name} 
+                              className="w-full h-full object-cover" 
+                            />
+                          </div>
+
+                          <div className="flex-grow min-w-0">
+                            <h3 className="font-bold text-sm text-white truncate group-hover:text-[#c0c1ff] transition-colors">{item.variant.name}</h3>
+                            <p className="text-[9px] text-[#908fa0] uppercase tracking-wider font-bold">{item.variant.brand}</p>
+                            
+                            <div className="flex items-center gap-4 mt-2">
+                              <div>
+                                <span className="text-[9px] text-[#908fa0] block">Current</span>
+                                <span className="text-sm font-bold text-white">₹{item.variant.bestPrice?.toLocaleString() || item.targetPrice.toLocaleString()}</span>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-[#908fa0] block">Target</span>
+                                <span className="text-sm font-bold text-[#c0c1ff]">₹{item.targetPrice.toLocaleString()}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col justify-between items-end shrink-0">
+                            <div className="relative w-8 h-8 flex items-center justify-center">
+                              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                                <circle 
+                                  cx="50" 
+                                  cy="50" 
+                                  fill="none" 
+                                  r="45" 
+                                  stroke="#c0c1ff" 
+                                  strokeLinecap="round" 
+                                  strokeWidth="8" 
+                                  strokeDasharray="283"
+                                  strokeDashoffset={strokeOffset}
+                                />
+                              </svg>
+                              <span className="absolute text-[10px] font-black text-[#c0c1ff]">{score}</span>
+                            </div>
+
+                            <button 
+                              onClick={() => handleDeleteWatchlist(item.id)}
+                              className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-red-500/15 hover:border-red-500/30 hover:text-red-400 transition-all cursor-pointer"
+                              title="Delete Alert"
+                            >
+                              <span className="material-symbols-outlined text-sm">delete</span>
+                            </button>
                           </div>
                         </div>
-                      </div>
-
-                      <h3 className="font-bold text-lg text-white mb-1 group-hover:text-[#c0c1ff] transition-colors">{item.variant.name}</h3>
-                      <p className="text-[10px] text-[#908fa0] uppercase tracking-wider font-bold">{item.variant.brand} ({item.variant.category})</p>
-
-                      <div className="bg-[#050506] rounded-xl p-4 border border-white/5 my-6">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-xs text-[#908fa0]">Current Price Alert</span>
-                          <span className="text-[#89ceff] text-[10px] font-bold flex items-center gap-1 uppercase tracking-wider">
-                            <span className="material-symbols-outlined text-[13px]">arrow_downward</span>
-                            Active
-                          </span>
-                        </div>
-                        <div className="flex items-baseline justify-between">
-                          <span className="text-2xl font-black text-white">₹{item.variant.bestPrice?.toLocaleString() || item.targetPrice.toLocaleString()}</span>
-                          <span className="text-[#908fa0] text-xs font-bold">Target: ₹{item.targetPrice.toLocaleString()}</span>
-                        </div>
-                      </div>
-
-                      <button 
-                        onClick={() => handleDeleteWatchlist(item.id)}
-                        className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-semibold flex items-center justify-center gap-2 hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-400 transition-all text-xs"
-                      >
-                        <span className="material-symbols-outlined text-sm">delete</span>
-                        Remove Alert
-                      </button>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Right Column: Saved Deals & Cart */}
+              <div className="glass-card rounded-3xl p-6 border border-white/5 bg-[#121315]/30">
+                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#c0c1ff]">shopping_cart</span>
+                  Saved Deals & Cart ({cart.length})
+                </h2>
+
+                {cart.length === 0 ? (
+                  <div className="glass-card rounded-2xl p-6 text-center py-12 border border-dashed border-white/5 bg-[#0d0e10]/20">
+                    <span className="material-symbols-outlined text-4xl text-[#908fa0] mb-3">shopping_cart</span>
+                    <h3 className="text-sm font-bold text-white mb-1">Your Saved Deals Cart is empty</h3>
+                    <p className="text-[11px] text-[#908fa0]">Save direct deals in comparison tables to bookmark specific sellers.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {cart.map((item) => {
+                      return (
+                        <div 
+                          key={item.id} 
+                          className="glass-card rounded-2xl p-4 flex gap-4 group hover:border-[#c0c1ff]/30 transition-all duration-300 bg-[#0d0e10]/30"
+                        >
+                          {/* Seller Marketplace Logo */}
+                          <div className="w-12 h-12 rounded-xl bg-[#121315] flex items-center justify-center p-2 border border-white/10 shrink-0">
+                            <img src={getRetailerLogo(item.marketplaceCode)} alt={item.marketplaceName} className="w-full h-full object-contain" />
+                          </div>
+
+                          <div className="flex-grow min-w-0">
+                            <h3 className="font-bold text-sm text-white truncate group-hover:text-[#c0c1ff] transition-colors">{item.title}</h3>
+                            <p className="text-[9px] text-[#908fa0] font-bold">Seller: {item.sellerName} ({item.sellerRating ? `${item.sellerRating} ⭐` : '—'})</p>
+                            
+                            <div className="flex items-center gap-4 mt-2">
+                              <div className="shrink-0">
+                                <span className="text-[9px] text-[#908fa0] block">Condition</span>
+                                <span className="text-xs font-bold text-white">{item.condition || 'NEW'}</span>
+                              </div>
+                              <div className="shrink-0">
+                                <span className="text-[9px] text-[#908fa0] block">Warranty</span>
+                                <span className="text-xs font-bold text-[#c0c1ff]">{item.warranty || '1 Year'}</span>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-[#908fa0] block">Price</span>
+                                <span className="text-sm font-extrabold text-[#89ceff]">₹{item.effectivePrice?.toLocaleString() || item.price?.toLocaleString()}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col justify-between items-end shrink-0 gap-2">
+                            <a 
+                              href={item.url || '#'}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 bg-[#c0c1ff]/10 hover:bg-[#c0c1ff] border border-[#c0c1ff]/20 text-[#c0c1ff] hover:text-[#1000a9] px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+                            >
+                              Buy
+                              <span className="material-symbols-outlined text-[11px]">open_in_new</span>
+                            </a>
+
+                            <button 
+                              onClick={() => handleRemoveFromCart(item.id)}
+                              className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-red-500/15 hover:border-red-500/30 hover:text-red-400 transition-all cursor-pointer"
+                              title="Remove from Cart"
+                            >
+                              <span className="material-symbols-outlined text-sm">delete_outline</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 

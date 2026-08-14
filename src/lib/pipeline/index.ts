@@ -486,6 +486,26 @@ export async function runDecisionPipeline(
   };
 }
 
+export function getMarketplaceSearchUrl(marketplaceCode: string, query: string): string {
+  const q = encodeURIComponent(query);
+  switch (marketplaceCode) {
+    case 'amazon':
+      return `https://www.amazon.in/s?k=${q}`;
+    case 'flipkart':
+      return `https://www.flipkart.com/search?q=${q}`;
+    case 'croma':
+      return `https://www.croma.com/search/?text=${q}`;
+    case 'reliance':
+      return `https://www.reliancedigital.in/search?q=${q}`;
+    case 'tatacliq':
+      return `https://www.tatacliq.com/search/?text=${q}`;
+    case 'olx':
+      return `https://www.olx.in/items/q-${q.replace(/%20/g, '-')}`;
+    default:
+      return `https://www.google.com/search?q=${q}`;
+  }
+}
+
 // ----------------------------------------------------
 // Robust Fallback Generator: Local specifications and listings
 // ----------------------------------------------------
@@ -606,7 +626,7 @@ export function generateMockListingsLocally(category: string, query: string, spe
       discount,
       effectivePrice: price + deliveryFee - discount,
       condition,
-      url: `https://www.${mCode}.com/search?q=${encodeURIComponent(title)}`,
+      url: getMarketplaceSearchUrl(mCode, title),
       warranty: isUsed ? '3 Months Seller Warranty' : `${1 + (i % 2)} Year Manufacturer Warranty`,
       warrantyMonths: isUsed ? 3 : (1 + (i % 2)) * 12,
       deliveryDays: isUsed ? 4 : 1 + (i % 4),
@@ -700,7 +720,7 @@ export async function runDealsPipeline(
     return {
       id: `deal-${l.marketplaceCode}-${index}`,
       title: l.title || `${productName} on ${l.marketplaceName}`,
-      url: l.url || `https://www.${l.marketplaceCode}.com`,
+      url: l.url || getMarketplaceSearchUrl(l.marketplaceCode, l.title || productName),
       price: basePrice,
       deliveryFee,
       discount: couponDiscount + bankDiscount,
