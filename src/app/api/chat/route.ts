@@ -107,7 +107,7 @@ export async function POST(request: Request) {
         };
       }
     } else {
-      responseText = "Hi! I am Veyquo AI, your personal decision co-pilot. I am currently running on local fallback rules because the active Gemini API key has exceeded its daily free-tier quota (HTTP 429). Once hosted with a standard billing tier key, I use live Google Search Grounding to query real-time listings, compare specs, identify the best seller, and return live buy links across Amazon, Flipkart, Croma, Reliance Digital, and OLX!";
+      responseText = "Hi! I am Veyquo AI, your personal decision co-pilot. I can help you compare products, adjust slider parameters, and find the best deals. Ask me to change priority weights (e.g. 'ignore warranty'), set maximum targets (e.g. 'budget to 20000'), or filter listings (e.g. 'show only new')!";
     }
 
     return NextResponse.json({
