@@ -5,6 +5,7 @@ import { compareListings, extractAttributes } from './matching';
 import { calculateScores, rankListings, ScoredListing, UserWeights } from './scoring';
 import { generateText, hasAI } from '../gemini';
 import { prisma } from '../prisma';
+import { crawlBuyHatke } from './buyhatke-scraper';
 
 export interface PipelineVariantGroup {
   id: string;
@@ -201,27 +202,11 @@ export async function fetchBuyHatkeListings(
   category: string,
   specsToCompare: string[]
 ): Promise<MarketplaceListing[]> {
-  const url = `https://buyhatke.com/search?product=${encodeURIComponent(query)}`;
-  const headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9'
-  };
-
   try {
-    console.log(`Live Scraper: Fetching BuyHatke url: ${url}`);
-    const res = await fetch(url, { headers });
-    if (!res.ok) {
-      console.warn(`Live Scraper: BuyHatke returned status ${res.status}`);
-      return [];
-    }
-    const htmlContent = await res.text();
+    const scrapedListings = await crawlBuyHatke(query);
+    if (!scrapedListings || scrapedListings.length === 0) return [];
 
     const products: MarketplaceListing[] = [];
-    const cardRegex = /<a\s+href="(\/[^"]+)"\s+class="[^"]*text-left[^"]*flex flex-col[^"]*">([\s\S]*?)<\/a>/gi;
-    let match;
-    let index = 0;
-
     const colors = ['Space Grey', 'Silver', 'Gold', 'Midnight Blue', 'Titanium'];
     const ramOptions = ['8 GB', '12 GB', '16 GB'];
     const storageOptions = ['128 GB', '256 GB', '512 GB'];
@@ -247,41 +232,11 @@ export async function fetchBuyHatkeListings(
         .trim();
     };
 
-    const detectBrand = (text: string) => {
-      const brands = [
-        'Apple', 'Samsung', 'OnePlus', 'Xiaomi', 'Google', 'Sony', 'LG', 'Dell', 'HP', 
-        'Lenovo', 'Asus', 'Nike', 'Adidas', 'Puma', 'Reebok', 'boAt', 'Noise', 'Boult', 
-        'Realme', 'Oppo', 'Vivo', 'Mivi', 'Motorola', 'JBL', 'Bose', 'Sennheiser', 'Philips'
-      ];
-      const matched = brands.find(b => text.toLowerCase().includes(b.toLowerCase()));
-      return matched || "Generic";
-    };
-
-    while ((match = cardRegex.exec(htmlContent)) !== null && index < 30) {
-      const detailPath = match[1];
-      const cardHtml = match[2];
-
-      // 1. Title
-      const titleMatch = cardHtml.match(/<p\s+class="[^"]*font-medium[^"]*"[^>]*title="([^"]+)"/i) 
-        || cardHtml.match(/<p\s+class="[^"]*font-medium[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
-      const title = titleMatch ? cleanTitleText(titleMatch[1] || titleMatch[2]) : 'Unknown Product';
-
-      // 2. Image
-      const imgMatch = cardHtml.match(/<img[^>]*src="([^"]+)"[^>]*class="[^"]*product_image[^"]*"/i)
-        || cardHtml.match(/<img[^>]*class="[^"]*product_image[^"]*"[^>]*src="([^"]+)"/i);
-      const imageUrl = imgMatch ? imgMatch[1] : `https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=300&q=80`;
-
-      // 3. Price
-      const priceMatch = cardHtml.match(/<p\s+class="[^"]*font-semibold[^"]*text-base[^"]*">[^₹]*₹\s*([0-9,]+)/i);
-      const price = priceMatch ? parseInt(priceMatch[1].replace(/,/g, '')) : 1299;
-
-      // 4. Marketplace logo/domain detection
-      const logoMatch = cardHtml.match(/src="[^"]*site_icons_m\/([a-zA-Z0-9]+)\.png"/i)
-        || cardHtml.match(/alt="([a-zA-Z0-9]+)logs"/i);
-      let marketplaceCode = logoMatch ? logoMatch[1].toLowerCase() : 'amazon';
-      
-      if (marketplaceCode === 'reliancedigital') marketplaceCode = 'reliance';
-      if (marketplaceCode === 'tatacliq') marketplaceCode = 'tatacliq';
+    scrapedListings.forEach((item, index) => {
+      const title = cleanTitleText(item.title);
+      const price = item.price;
+      const mCode = item.marketplace.toLowerCase().replace(/\s+/g, '');
+      const mCodeNormalized = mCode === 'reliancedigital' ? 'reliance' : (mCode === 'tatacliq' ? 'tatacliq' : mCode);
 
       const marketplaceNames: Record<string, string> = {
         amazon: 'Amazon',
@@ -291,8 +246,7 @@ export async function fetchBuyHatkeListings(
         tatacliq: 'Tata CLiQ',
         olx: 'OLX'
       };
-      const marketplaceName = marketplaceNames[marketplaceCode] || 'Amazon';
-      const buyUrl = `https://buyhatke.com${detailPath}`;
+      const marketplaceName = marketplaceNames[mCodeNormalized] || item.marketplace;
 
       // Build specs
       const color = colors[index % colors.length];
@@ -324,25 +278,23 @@ export async function fetchBuyHatkeListings(
         discount: 0,
         effectivePrice: price,
         condition: 'NEW',
-        url: buyUrl,
+        url: item.productUrl,
         warranty: '1 Year Manufacturer Warranty',
         warrantyMonths: 12,
         deliveryDays: 1 + (index % 3),
         returnPolicy: '10 Days Return Policy',
         sellerName: 'Authorized Retailer',
-        sellerRating: parseFloat((4.0 + ((index % 5) * 0.2)).toFixed(1)),
+        sellerRating: item.sellerRating || 4.5,
         sellerReviewCount: 150 + index * 20,
         sellerTrustStatus: 'VERIFIED',
         marketplaceName,
-        marketplaceCode,
+        marketplaceCode: mCodeNormalized,
         specifications: specs as any,
-        sourceType: 'LIVE_API'
+        sourceType: 'LIVE_API',
+        imageUrl: item.imageUrl
       });
+    });
 
-      index++;
-    }
-
-    console.log(`Live Scraper: Successfully parsed ${products.length} products from BuyHatke`);
     return products;
   } catch (err) {
     console.error("fetchBuyHatkeListings error:", err);

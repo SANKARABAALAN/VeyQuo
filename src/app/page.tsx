@@ -580,7 +580,8 @@ export default function Home() {
           name: selectedProduct.name,
           brand: selectedProduct.brand,
           category: result?.intent.category || "General",
-          bestPrice: selectedProduct.minPrice
+          bestPrice: selectedProduct.minPrice,
+          imageUrl: selectedProduct.listings[0]?.imageUrl
         }
       };
       const local = localStorage.getItem('veyquo_watchlist');
@@ -772,7 +773,8 @@ export default function Home() {
   };
 
 
-  const getProductImage = (title: string) => {
+  const getProductImage = (title: string, customImgUrl?: string | null) => {
+    if (customImgUrl) return customImgUrl;
     return `/api/product-image?q=${encodeURIComponent(title)}`;
   };
 
@@ -962,7 +964,7 @@ export default function Home() {
                   {paginatedVariants.map((v) => (
                     <div key={v.id} className="glass-panel rounded-2xl p-5 flex flex-col hover:border-[#c0c1ff]/30 transition-all duration-500">
                       <div className="w-full h-40 bg-[#0d0e10] rounded-xl overflow-hidden mb-4 border border-white/5 flex items-center justify-center">
-                        <img src={getProductImage(v.name)} alt={v.name} className="w-full h-full object-cover" />
+                        <img src={getProductImage(v.name, v.listings[0]?.imageUrl)} alt={v.name} className="w-full h-full object-cover" />
                       </div>
                       <h3 className="font-bold text-white mb-1 line-clamp-1">{v.name}</h3>
                       <p className="text-[10px] text-[#908fa0] uppercase tracking-wider font-extrabold mb-4">{v.brand}</p>
@@ -1019,7 +1021,7 @@ export default function Home() {
 
             <div className="glass-panel rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8">
               <div className="w-full md:w-1/3 bg-[#0d0e10] rounded-2xl overflow-hidden border border-white/5 flex items-center justify-center p-4">
-                <img src={getProductImage(selectedProduct.name)} alt={selectedProduct.name} className="w-full max-h-60 object-contain" />
+                <img src={getProductImage(selectedProduct.name, selectedProduct.listings[0]?.imageUrl)} alt={selectedProduct.name} className="w-full max-h-60 object-contain" />
               </div>
               <div className="flex-1 flex flex-col">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedProduct.name}</h1>
@@ -1257,7 +1259,7 @@ export default function Home() {
                         >
                           <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 bg-[#0d0e10] flex items-center justify-center relative shrink-0">
                             <img 
-                              src={getProductImage(item.variant.name)} 
+                              src={getProductImage(item.variant.name, item.variant.imageUrl)} 
                               alt={item.variant.name} 
                               className="w-full h-full object-cover" 
                             />

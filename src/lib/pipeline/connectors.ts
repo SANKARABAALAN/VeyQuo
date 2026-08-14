@@ -20,6 +20,7 @@ export interface MarketplaceListing {
   marketplaceCode: string;
   specifications: { key: string; value: string }[];
   sourceType: 'LIVE_API' | 'USER_URL' | 'USER_PASTED_DATA' | 'DEMO_DATA';
+  imageUrl?: string | null;
 }
 
 export interface MarketplaceConnector {
