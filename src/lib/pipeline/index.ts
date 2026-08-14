@@ -495,7 +495,11 @@ export function generateMockListingsLocally(category: string, query: string, spe
   // 1. Detect Brand from query
   const lowerQuery = query.toLowerCase();
   let brand = "Generic";
-  const brandsList = ['apple', 'samsung', 'oneplus', 'xiaomi', 'google', 'sony', 'lg', 'dell', 'hp', 'lenovo', 'asus', 'nike', 'adidas', 'puma', 'reebok'];
+  const brandsList = [
+    'apple', 'samsung', 'oneplus', 'xiaomi', 'google', 'sony', 'lg', 'dell', 'hp', 
+    'lenovo', 'asus', 'nike', 'adidas', 'puma', 'reebok', 'boat', 'noise', 'boult', 
+    'realme', 'oppo', 'vivo', 'mivi', 'motorola', 'jbl', 'bose', 'sennheiser'
+  ];
   const matchedBrand = brandsList.find(b => lowerQuery.includes(b));
   if (matchedBrand) {
     brand = matchedBrand.charAt(0).toUpperCase() + matchedBrand.slice(1);
@@ -563,13 +567,14 @@ export function generateMockListingsLocally(category: string, query: string, spe
     const ram = ramOptions[i % ramOptions.length];
     const storage = storageOptions[i % storageOptions.length];
     
-    let title = `${brand} ${cleanName}`;
+    let baseTitle = cleanName.toLowerCase().startsWith(brand.toLowerCase()) ? cleanName : `${brand} ${cleanName}`;
+    let title = baseTitle;
     
     // Append variations to make it realistic
     if (category.toLowerCase() === 'smartphones' || category.toLowerCase() === 'laptops') {
-      title = `${brand} ${cleanName} (${storage}, ${color})`;
+      title = `${baseTitle} (${storage}, ${color})`;
     } else if (category.toLowerCase().includes('earbuds') || category.toLowerCase().includes('earphones')) {
-      title = `${brand} ${cleanName} True Wireless Earbuds (${color})`;
+      title = `${baseTitle} True Wireless Earbuds (${color})`;
     } else if (category.toLowerCase().includes('tv') || category.toLowerCase().includes('television')) {
       const sizes = ['43"', '55"', '65"'];
       title = `${brand} ${sizes[i % sizes.length]} UHD Smart TV`;

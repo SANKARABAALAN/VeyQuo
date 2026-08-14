@@ -11,49 +11,47 @@ function cleanQuery(q: string) {
   cleaned = cleaned.replace(/\d+\s*(gb|tb|mb|ram)/gi, '');
   
   // 3. Remove noise words
-  cleaned = cleaned.replace(/\b(crawled|specs|compare|variant|high performance|starting at|starting|smartphones|laptops|refrigerators|washing machines|smartwatches|earbuds|wireless earbuds|earphones|tvs|tv|televisions|shoes)\b/gi, '');
+  cleaned = cleaned.replace(/\b(crawled|specs|compare|variant|high performance|starting at|starting|smartphones|laptops|refrigerators|washing machines|smartwatches|earbuds|wireless earbuds|earphones|tvs|tv|televisions|shoes|true wireless)\b/gi, '');
 
   // 4. Remove special characters and clean spacing
   cleaned = cleaned.replace(/[^a-zA-Z0-9\s-]/g, ' ');
   cleaned = cleaned.replace(/\s+/g, ' ').trim();
 
-  // Proper capitalization and iPhone format
+  // Proper capitalization and iPhone formatting
   return cleaned.split(' ').map(w => {
     if (w.toLowerCase() === 'iphone') return 'iPhone';
     return w.charAt(0).toUpperCase() + w.slice(1);
   }).join(' ');
 }
 
-async function getWikiImage(query: string): Promise<string | null> {
-  const cleaned = cleanQuery(query);
+async function getDDGImages(query: string): Promise<string[] | null> {
   const headers = {
-    'User-Agent': 'VeyquoProductIntelligence/1.0 (contact@veyquo.com)'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
   };
   
   try {
-    const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&format=json&origin=*`;
+    // 1. Fetch main search page to get the VQD session token
+    const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query + ' product')}`;
     const searchRes = await fetch(searchUrl, { headers, next: { revalidate: 86400 } });
-    const searchData = await searchRes.json();
-    const searchResults = searchData.query?.search;
+    const html = await searchRes.text();
     
-    if (searchResults && searchResults.length > 0) {
-      const pageTitle = searchResults[0].title;
-      
-      const imageQueryUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(pageTitle)}&prop=pageimages&format=json&pithumbsize=500&origin=*`;
-      const imgRes = await fetch(imageQueryUrl, { headers, next: { revalidate: 86400 } });
-      const imgData = await imgRes.json();
-      
-      const pages = imgData.query?.pages;
-      if (pages) {
-        const pageId = Object.keys(pages)[0];
-        const thumbnail = pages[pageId]?.thumbnail;
-        if (thumbnail && thumbnail.source) {
-          return thumbnail.source;
-        }
-      }
+    // Extract the vqd token
+    const vqdRegex = /vqd\s*=\s*['"]([^'"]+)['"]/i;
+    const vqdMatch = html.match(vqdRegex);
+    if (!vqdMatch) return null;
+    const vqd = vqdMatch[1];
+    
+    // 2. Query the DDG internal image JSON API using the session token
+    const imageApiUrl = `https://duckduckgo.com/i.js?q=${encodeURIComponent(query + ' product')}&o=json&vqd=${vqd}&f=,,,`;
+    const imageRes = await fetch(imageApiUrl, { headers, next: { revalidate: 86400 } });
+    const data = await imageRes.json();
+    
+    const results = data.results;
+    if (results && results.length > 0) {
+      return results.map((r: any) => r.image);
     }
   } catch (err) {
-    console.error("Wikipedia API error:", err);
+    console.error("DDG image scraping error:", err);
   }
   return null;
 }
@@ -80,43 +78,25 @@ export async function GET(request: Request) {
     return NextResponse.redirect(fallbackRedirect(''));
   }
 
-  // 1. Try Wikipedia first
-  const wikiImage = await getWikiImage(query);
-  if (wikiImage) {
-    return NextResponse.redirect(wikiImage);
-  }
+  const cleaned = cleanQuery(query);
 
-  // 2. Fallback to Bing Images but with cleaned query
-  try {
-    const cleaned = cleanQuery(query);
-    const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(cleaned + ' product photo white background')}&first=1`;
-    const res = await fetch(searchUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
-      },
-      next: { revalidate: 86400 } // Cache for 24 hours
-    });
-
-    if (res.ok) {
-      const html = await res.text();
-      const regex = /murl&quot;:&quot;(https:[^&]+)&quot;/g;
-      const matches = [];
-      let match;
-      while ((match = regex.exec(html)) !== null) {
-        const url = decodeURIComponent(match[1]);
-        if (!url.includes('logo') && !url.includes('icon') && !url.includes('avatar') && !url.includes('layout') && !url.includes('floor')) {
-          matches.push(url);
-        }
-      }
-
-      if (matches.length > 0) {
-        return NextResponse.redirect(matches[0]);
-      }
+  // 1. Fetch images from DuckDuckGo
+  const images = await getDDGImages(cleaned);
+  if (images && images.length > 0) {
+    // Filter out standard placeholders or icons
+    const validImages = images.filter(url => 
+      !url.includes('logo') && 
+      !url.includes('icon') && 
+      !url.includes('avatar') && 
+      !url.includes('layout') && 
+      !url.includes('floor')
+    );
+    if (validImages.length > 0) {
+      // Redirect to the first valid clean product image
+      return NextResponse.redirect(validImages[0]);
     }
-  } catch (error) {
-    console.error("Error fetching product image from internet:", error);
   }
 
-  // 3. Final Fallback to Unsplash
+  // 2. Final Fallback to Unsplash categories if all else fails
   return NextResponse.redirect(fallbackRedirect(query));
 }
