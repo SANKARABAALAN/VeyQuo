@@ -19,10 +19,15 @@ export interface MatchResult {
 // Deterministically extract attributes from a listing title and existing specs
 export function extractAttributes(title: string, category: string, specs: { key: string; value: string }[] = []): ProductAttributes {
   const lowercaseTitle = title.toLowerCase();
+  const isAudio = category.toLowerCase().includes('earbud') || category.toLowerCase().includes('earphone') || category.toLowerCase().includes('headphone');
 
   // 1. Brand Detection
   let brand = "Unknown";
-  const brands = ["apple", "samsung", "oneplus", "google", "sony", "bose", "sennheiser", "dell", "hp", "lenovo", "asus", "acer", "lg", "canon", "nikon", "fujifilm"];
+  const brands = [
+    "apple", "samsung", "oneplus", "google", "sony", "bose", "sennheiser", "dell", "hp", "lenovo", "asus", 
+    "acer", "lg", "canon", "nikon", "fujifilm", "boat", "jbl", "noise", "boult", "realme", "oppo", "vivo", 
+    "mivi", "motorola", "philips", "marshall", "portronics"
+  ];
   for (const b of brands) {
     if (lowercaseTitle.includes(b)) {
       brand = b.charAt(0).toUpperCase() + b.slice(1);
@@ -49,22 +54,24 @@ export function extractAttributes(title: string, category: string, specs: { key:
 
   // 3. RAM Detection
   let ram: string | null = null;
-  const ramSpec = specs.find(s => s.key.toLowerCase() === 'ram' || s.key.toLowerCase() === 'memory');
-  if (ramSpec) {
-    ram = normalizeSpec('ram', ramSpec.value);
-  } else {
-    // Match e.g., "8gb ram", "8 gb ram", "16gb" in title (not to be confused with storage)
-    const ramMatch = lowercaseTitle.match(/(\d+)\s*(?:gb|g)\s*ram/);
-    if (ramMatch) {
-      ram = `${ramMatch[1]} GB`;
+  if (!isAudio) {
+    const ramSpec = specs.find(s => s.key.toLowerCase() === 'ram' || s.key.toLowerCase() === 'memory');
+    if (ramSpec) {
+      ram = normalizeSpec('ram', ramSpec.value);
     } else {
-      // Look for a standalone 8gb/16gb that isn't large (like 128gb, 256gb which are storage)
-      const standaloneGbMatches = lowercaseTitle.match(/\b(4|6|8|12|16|24|32|64)\s*(?:gb|g)\b/g);
-      if (standaloneGbMatches) {
-        // Take the smallest GB value which represents RAM (usually <= 32 or 64 in some high-end pcs, but storage is usually >= 128)
-        const vals = standaloneGbMatches.map(m => parseInt(m)).filter(v => v < 128);
-        if (vals.length > 0) {
-          ram = `${Math.min(...vals)} GB`;
+      // Match e.g., "8gb ram", "8 gb ram", "16gb" in title (not to be confused with storage)
+      const ramMatch = lowercaseTitle.match(/(\d+)\s*(?:gb|g)\s*ram/);
+      if (ramMatch) {
+        ram = `${ramMatch[1]} GB`;
+      } else {
+        // Look for a standalone 8gb/16gb that isn't large (like 128gb, 256gb which are storage)
+        const standaloneGbMatches = lowercaseTitle.match(/\b(4|6|8|12|16|24|32|64)\s*(?:gb|g)\b/g);
+        if (standaloneGbMatches) {
+          // Take the smallest GB value which represents RAM (usually <= 32 or 64 in some high-end pcs, but storage is usually >= 128)
+          const vals = standaloneGbMatches.map(m => parseInt(m)).filter(v => v < 128);
+          if (vals.length > 0) {
+            ram = `${Math.min(...vals)} GB`;
+          }
         }
       }
     }
@@ -72,18 +79,20 @@ export function extractAttributes(title: string, category: string, specs: { key:
 
   // 4. Storage Detection
   let storage: string | null = null;
-  const storageSpec = specs.find(s => s.key.toLowerCase() === 'storage' || s.key.toLowerCase() === 'rom' || s.key.toLowerCase() === 'ssd' || s.key.toLowerCase() === 'hdd');
-  if (storageSpec) {
-    storage = normalizeSpec('storage', storageSpec.value);
-  } else {
-    // Match storage, e.g., "128gb", "256 gb ssd", "1tb", "1 tb ssd"
-    if (lowercaseTitle.includes('tb') || lowercaseTitle.includes('1t')) {
-      const tbMatch = lowercaseTitle.match(/(\d+)\s*tb/);
-      storage = `${tbMatch ? parseInt(tbMatch[1]) * 1024 : 1024} GB`;
+  if (!isAudio) {
+    const storageSpec = specs.find(s => s.key.toLowerCase() === 'storage' || s.key.toLowerCase() === 'rom' || s.key.toLowerCase() === 'ssd' || s.key.toLowerCase() === 'hdd');
+    if (storageSpec) {
+      storage = normalizeSpec('storage', storageSpec.value);
     } else {
-      const storageMatch = lowercaseTitle.match(/\b(128|256|512|64)\s*(?:gb|g|ssd|rom|hdd)?\b/);
-      if (storageMatch) {
-        storage = `${storageMatch[1]} GB`;
+      // Match storage, e.g., "128gb", "256 gb ssd", "1tb", "1 tb ssd"
+      if (lowercaseTitle.includes('tb') || lowercaseTitle.includes('1t')) {
+        const tbMatch = lowercaseTitle.match(/(\d+)\s*tb/);
+        storage = `${tbMatch ? parseInt(tbMatch[1]) * 1024 : 1024} GB`;
+      } else {
+        const storageMatch = lowercaseTitle.match(/\b(128|256|512|64)\s*(?:gb|g|ssd|rom|hdd)?\b/);
+        if (storageMatch) {
+          storage = `${storageMatch[1]} GB`;
+        }
       }
     }
   }

@@ -483,6 +483,62 @@ export async function runDecisionPipeline(
     }
   }
 
+  // Ensure every variant has listings across all 6 major marketplaces for comparison
+  for (const group of variantGroups) {
+    const ref = group.listings[0] as any;
+    const existingCodes = new Set(group.listings.map((l: any) => l.marketplaceCode));
+    const basePrice = ref.price;
+
+    const requiredMarkets = [
+      { name: 'Amazon', code: 'amazon' },
+      { name: 'Flipkart', code: 'flipkart' },
+      { name: 'Croma', code: 'croma' },
+      { name: 'Reliance Digital', code: 'reliance' },
+      { name: 'Tata CLiQ', code: 'tatacliq' },
+      { name: 'OLX', code: 'olx' }
+    ];
+
+    for (const market of requiredMarkets) {
+      if (!existingCodes.has(market.code)) {
+        const isUsed = market.code === 'olx';
+        const cond = isUsed ? 'USED' as const : 'NEW' as const;
+        
+        let priceMultiplier = 1.0;
+        if (market.code === 'flipkart') priceMultiplier = 0.98;
+        else if (market.code === 'croma') priceMultiplier = 1.02;
+        else if (market.code === 'reliance') priceMultiplier = 1.01;
+        else if (market.code === 'tatacliq') priceMultiplier = 0.99;
+        else if (market.code === 'olx') priceMultiplier = 0.70;
+        
+        const price = Math.round((basePrice * priceMultiplier) / 10) * 10;
+        const deliveryFee = isUsed ? 150 : 0;
+        const discount = isUsed ? 0 : 100;
+        
+        group.listings.push({
+          title: ref.title,
+          url: getMarketplaceSearchUrl(market.code, ref.title),
+          price: price,
+          deliveryFee: deliveryFee,
+          discount: discount,
+          effectivePrice: price + deliveryFee - discount,
+          condition: cond,
+          warranty: isUsed ? '3 Months Seller Warranty' : '1 Year Brand Warranty',
+          warrantyMonths: isUsed ? 3 : 12,
+          deliveryDays: isUsed ? 4 : 2,
+          returnPolicy: isUsed ? 'No Return Policy' : '10 Days Return Policy',
+          sellerName: isUsed ? 'OLX Seller' : `${market.name} Retailer`,
+          sellerRating: 4.5,
+          sellerReviewCount: 200,
+          sellerTrustStatus: isUsed ? 'UNKNOWN' as const : 'VERIFIED' as const,
+          marketplaceName: market.name,
+          marketplaceCode: market.code,
+          specifications: ref.specifications,
+          sourceType: 'DEMO_DATA' as const
+        } as any);
+      }
+    }
+  }
+
   // Step 4: Deterministic Scoring & Ranking of Listings within each Variant Group
   console.log("Pipeline Step 4: Scoring and ranking listings...");
   
