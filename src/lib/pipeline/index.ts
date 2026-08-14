@@ -49,37 +49,42 @@ async function generateDynamicDemoListings(
       Generate 5 to 6 realistic, diverse, and structured marketplace listings that match this query.
       Ensure there is a mix of high-end, budget-friendly, new, and refurbished options across different marketplaces (Amazon, Flipkart, Croma, Reliance Digital).
       
-      For each listing, return a JSON object conforming exactly to this structure:
+      Return a JSON object containing an array of listings under the "listings" key:
       {
-        "title": "Clean full product title, e.g. Samsung 253L 3 Star Frost Free Refrigerator",
-        "brand": "Samsung",
-        "model": "253L Frost Free",
-        "price": 28490,
-        "deliveryFee": 0,
-        "discount": 1500,
-        "condition": "NEW" or "REFURBISHED" or "USED",
-        "warranty": "1 Year Comprehensive Warranty",
-        "warrantyMonths": 12,
-        "deliveryDays": 3,
-        "returnPolicy": "10 Days Replacement",
-        "sellerName": "Appario Retail" or another realistic seller,
-        "sellerRating": 4.4,
-        "sellerTrustStatus": "VERIFIED" or "UNKNOWN",
-        "marketplaceName": "Amazon" or "Flipkart" or "Croma" or "Reliance Digital",
-        "marketplaceCode": "amazon" or "flipkart" or "croma" or "reliance",
-        "specifications": [
-          // Must include the following keys: ${JSON.stringify(specsToCompare)}
-          // E.g. {"key": "Capacity", "value": "253 Liters"}, {"key": "Energy Rating", "value": "3 Star"}
+        "listings": [
+          {
+            "title": "Clean full product title, e.g. Samsung 253L 3 Star Frost Free Refrigerator",
+            "brand": "Samsung",
+            "model": "253L Frost Free",
+            "price": 28490,
+            "deliveryFee": 0,
+            "discount": 1500,
+            "condition": "NEW" or "REFURBISHED" or "USED",
+            "warranty": "1 Year Comprehensive Warranty",
+            "warrantyMonths": 12,
+            "deliveryDays": 3,
+            "returnPolicy": "10 Days Replacement",
+            "sellerName": "Appario Retail" or another realistic seller,
+            "sellerRating": 4.4,
+            "sellerTrustStatus": "VERIFIED" or "UNKNOWN",
+            "marketplaceName": "Amazon" or "Flipkart" or "Croma" or "Reliance Digital",
+            "marketplaceCode": "amazon" or "flipkart" or "croma" or "reliance",
+            "specifications": [
+              // Must include the following keys: ${JSON.stringify(specsToCompare)}
+              // E.g. {"key": "Capacity", "value": "253 Liters"}, {"key": "Energy Rating", "value": "3 Star"}
+            ]
+          }
         ]
       }
 
-      Return ONLY a valid JSON array of these listings. Do not add markdown backticks or any other text.
+      Return ONLY a valid JSON object. Do not add markdown backticks or any other text.
     `;
 
     const responseText = await generateText(prompt, true, true);
 
     if (responseText) {
-      return JSON.parse(responseText.trim());
+      const parsed = JSON.parse(responseText.trim());
+      return Array.isArray(parsed) ? parsed : (parsed.listings || []);
     }
   } catch (error) {
     console.error("Error generating dynamic demo listings:", error);
@@ -486,67 +491,127 @@ export async function runDecisionPipeline(
 // ----------------------------------------------------
 export function generateMockListingsLocally(category: string, query: string, specsToCompare: string[]) {
   const listings = [];
-  const brands: Record<string, string[]> = {
-    'Smartphones': ['Apple', 'Samsung', 'OnePlus', 'Xiaomi', 'Google'],
-    'Laptops': ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus'],
-    'Refrigerators': ['LG', 'Samsung', 'Whirlpool', 'Godrej', 'Haier'],
-    'Washing Machines': ['IFB', 'LG', 'Samsung', 'Bosch', 'Panasonic'],
-    'Smartwatches': ['Apple', 'Samsung', 'Fitbit', 'Garmin', 'Fossil'],
-    'Earbuds': ['Sony', 'Bose', 'Sennheiser', 'OnePlus', 'JBL'],
-    'Wireless Earbuds': ['Sony', 'Bose', 'Sennheiser', 'OnePlus', 'JBL'],
-    'Earphones': ['Sony', 'Bose', 'Sennheiser', 'OnePlus', 'JBL'],
-    'TVs': ['Sony', 'Samsung', 'LG', 'OnePlus', 'Xiaomi'],
-    'TV': ['Sony', 'Samsung', 'LG', 'OnePlus', 'Xiaomi'],
-    'Televisions': ['Sony', 'Samsung', 'LG', 'OnePlus', 'Xiaomi'],
-    'Shoes': ['Nike', 'Adidas', 'Puma', 'Reebok', 'Under Armour']
-  };
+  
+  // 1. Detect Brand from query
+  const lowerQuery = query.toLowerCase();
+  let brand = "Generic";
+  const brandsList = ['apple', 'samsung', 'oneplus', 'xiaomi', 'google', 'sony', 'lg', 'dell', 'hp', 'lenovo', 'asus', 'nike', 'adidas', 'puma', 'reebok'];
+  const matchedBrand = brandsList.find(b => lowerQuery.includes(b));
+  if (matchedBrand) {
+    brand = matchedBrand.charAt(0).toUpperCase() + matchedBrand.slice(1);
+  } else {
+    // If no brand detected, use a default category brand
+    const categoryBrands: Record<string, string> = {
+      'smartphones': 'Apple',
+      'laptops': 'Apple',
+      'refrigerators': 'Samsung',
+      'washing machines': 'LG',
+      'smartwatches': 'Apple',
+      'wireless earbuds': 'Sony',
+      'earbuds': 'Sony',
+      'earphones': 'Sony',
+      'tvs': 'Sony',
+      'tv': 'Sony',
+      'shoes': 'Nike'
+    };
+    const key = Object.keys(categoryBrands).find(k => k.toLowerCase() === category.toLowerCase());
+    brand = key ? categoryBrands[key] : 'Generic';
+  }
 
-  const matchedKey = Object.keys(brands).find(k => k.toLowerCase() === category.toLowerCase()) || 'Smartphones';
-  const selectedBrands = brands[matchedKey];
-  const marketNames = ['Amazon', 'Flipkart', 'Croma', 'Reliance Digital', 'Tata CLiQ'];
-  const marketCodes = ['amazon', 'flipkart', 'croma', 'reliance', 'tatacliq'];
+  // 2. Clean query name to get a realistic title
+  let cleanName = query;
+  cleanName = cleanName.split(/\s+/).map(word => {
+    if (word.toLowerCase().startsWith('iphone')) {
+      const numMatch = word.match(/\d+/);
+      return 'iPhone' + (numMatch ? ' ' + numMatch[0] : '');
+    }
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(' ');
+
+  const marketNames = ['Amazon', 'Flipkart', 'Croma', 'Reliance Digital', 'Tata CLiQ', 'OLX'];
+  const marketCodes = ['amazon', 'flipkart', 'croma', 'reliance', 'tatacliq', 'olx'];
 
   for (let i = 0; i < 30; i++) {
-    const brand = selectedBrands[i % selectedBrands.length];
-    const model = `${category} Model-${i + 1} Z`;
-    const title = `${brand} ${model} with High Performance`;
-    const price = 4999 + i * 2500;
-    const condition = i % 10 === 8 ? 'REFURBISHED' : i % 10 === 9 ? 'USED' : 'NEW';
+    const marketIndex = i % marketNames.length;
+    const mName = marketNames[marketIndex];
+    const mCode = marketCodes[marketIndex];
+    
+    // Add realistic variations (e.g. 128GB, 256GB, different colors, refurbished)
+    const isUsed = mCode === 'olx';
+    const condition = isUsed ? 'USED' as const : (i % 8 === 0 ? 'REFURBISHED' as const : 'NEW' as const);
+    
+    let priceMultiplier = 1.0;
+    if (condition === 'USED') priceMultiplier = 0.75;
+    else if (condition === 'REFURBISHED') priceMultiplier = 0.88;
+    
+    // Base price guess based on category / query
+    let basePrice = 59999;
+    if (lowerQuery.includes('pro') || lowerQuery.includes('ultra') || lowerQuery.includes('max')) basePrice = 89999;
+    if (lowerQuery.includes('macbook') || lowerQuery.includes('laptop')) basePrice = 79999;
+    if (lowerQuery.includes('tv') || lowerQuery.includes('television')) basePrice = 39999;
+    if (lowerQuery.includes('earphones') || lowerQuery.includes('earbuds') || lowerQuery.includes('shoes')) basePrice = 5999;
+    
+    // Add variation to price
+    const baseVal = basePrice * priceMultiplier;
+    const price = Math.round((baseVal + (i * 800) - (i % 3 * 2000)) / 100) * 100;
+    
+    const colors = ['Space Grey', 'Silver', 'Gold', 'Midnight Blue', 'Titanium'];
+    const ramOptions = ['8 GB', '12 GB', '16 GB'];
+    const storageOptions = ['128 GB', '256 GB', '512 GB'];
+    
+    const color = colors[i % colors.length];
+    const ram = ramOptions[i % ramOptions.length];
+    const storage = storageOptions[i % storageOptions.length];
+    
+    let title = `${brand} ${cleanName}`;
+    
+    // Append variations to make it realistic
+    if (category.toLowerCase() === 'smartphones' || category.toLowerCase() === 'laptops') {
+      title = `${brand} ${cleanName} (${storage}, ${color})`;
+    } else if (category.toLowerCase().includes('earbuds') || category.toLowerCase().includes('earphones')) {
+      title = `${brand} ${cleanName} True Wireless Earbuds (${color})`;
+    } else if (category.toLowerCase().includes('tv') || category.toLowerCase().includes('television')) {
+      const sizes = ['43"', '55"', '65"'];
+      title = `${brand} ${sizes[i % sizes.length]} UHD Smart TV`;
+    }
+
+    const deliveryFee = isUsed ? 150 : (i % 2 === 0 ? 0 : 99);
+    const discount = isUsed ? 0 : (i % 3 === 0 ? 500 : 0);
 
     const specs = specsToCompare.map(key => {
       let val = 'Standard';
-      if (key.toLowerCase().includes('capacity')) val = `${180 + i * 2} Liters`;
-      else if (key.toLowerCase().includes('rating')) val = `${3 + (i % 3)} Star`;
-      else if (key.toLowerCase().includes('ram')) val = `${4 + (i % 3) * 4} GB`;
-      else if (key.toLowerCase().includes('storage')) val = `${64 + (i % 3) * 64} GB`;
-      else if (key.toLowerCase().includes('warranty')) val = `${1 + (i % 2)} Year Manufacturer`;
-      else if (key.toLowerCase().includes('processor')) val = i % 2 === 0 ? 'Intel Core i5' : 'AMD Ryzen 5';
-      else if (key.toLowerCase().includes('size')) val = `${8 + (i % 4)}`;
+      const kLower = key.toLowerCase();
+      if (kLower.includes('capacity')) val = `${250 + i * 5} Liters`;
+      else if (kLower.includes('rating')) val = `${3 + (i % 3)} Star`;
+      else if (kLower.includes('ram')) val = ram;
+      else if (kLower.includes('storage')) val = storage;
+      else if (kLower.includes('camera')) val = `${48 + (i % 3) * 12} MP`;
+      else if (kLower.includes('battery')) val = `${4000 + (i % 4) * 500} mAh`;
+      else if (kLower.includes('display')) val = category.toLowerCase() === 'laptops' ? '15.6" IPS' : '6.7" Super Retina';
+      else if (kLower.includes('size')) val = 'Standard';
       return { key, value: val };
     });
 
-    const deliveryFee = i % 2 === 0 ? 0 : 99;
-    const discount = i % 3 === 0 ? 500 : 0;
     listings.push({
       title,
       brand,
-      model,
+      model: cleanName,
       price,
       deliveryFee,
       discount,
       effectivePrice: price + deliveryFee - discount,
-      condition: condition as 'NEW' | 'REFURBISHED' | 'USED',
-      url: `https://www.${marketCodes[i % marketCodes.length]}.com/search?q=${encodeURIComponent(title)}`,
-      warranty: `${1 + (i % 2)} Year Manufacturer Warranty`,
-      warrantyMonths: (1 + (i % 2)) * 12,
-      deliveryDays: 1 + (i % 4),
-      returnPolicy: "10 Days Return Policy",
-      sellerName: `Seller-${brand}-${i}`,
+      condition,
+      url: `https://www.${mCode}.com/search?q=${encodeURIComponent(title)}`,
+      warranty: isUsed ? '3 Months Seller Warranty' : `${1 + (i % 2)} Year Manufacturer Warranty`,
+      warrantyMonths: isUsed ? 3 : (1 + (i % 2)) * 12,
+      deliveryDays: isUsed ? 4 : 1 + (i % 4),
+      returnPolicy: isUsed ? 'No Return Policy' : '10 Days Return Policy',
+      sellerName: isUsed ? `User-${brand}-${i}` : `Retailer-${brand}-${i}`,
       sellerRating: parseFloat((4.0 + ((i % 5) * 0.2)).toFixed(1)),
       sellerReviewCount: 120 + i * 15,
-      sellerTrustStatus: (i % 2 === 0 ? 'VERIFIED' : 'UNKNOWN') as 'VERIFIED' | 'UNKNOWN',
-      marketplaceName: marketNames[i % marketNames.length],
-      marketplaceCode: marketCodes[i % marketCodes.length],
+      sellerTrustStatus: isUsed ? 'UNKNOWN' as const : (i % 2 === 0 ? 'VERIFIED' as const : 'UNKNOWN' as const),
+      marketplaceName: mName,
+      marketplaceCode: mCode,
       specifications: specs,
       sourceType: 'DEMO_DATA' as const
     });
