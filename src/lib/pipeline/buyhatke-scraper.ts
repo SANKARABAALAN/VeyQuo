@@ -22,11 +22,15 @@ function parsePrice(text: string): number | null {
 export async function crawlBuyHatke(query: string): Promise<BuyHatkeListing[]> {
   const normQuery = query.toLowerCase().trim();
   const cached = cache.get(normQuery);
-  if (cached && cached.expiry > Date.now()) return cached.data;
+  if (cached && cached.expiry > Date.now()) {
+    console.log(`Scraper Cache: Hit for "${normQuery}"`);
+    return cached.data;
+  }
 
   const searchUrl = `https://buyhatke.com/search?product=${encodeURIComponent(query)}`;
 
   try {
+    console.log(`Scraper Fetching: ${searchUrl}`);
     const res = await fetch(searchUrl, {
       headers: {
         "User-Agent":
@@ -54,7 +58,7 @@ export async function crawlBuyHatke(query: string): Promise<BuyHatkeListing[]> {
     }
 
     const $ = cheerio.load(html);
-    const listings: BuyHatkeListing[] = [];
+    const listingsMap = new Map<string, BuyHatkeListing>();
 
     $("a.text-left.flex.flex-col").each((_, el) => {
       const card = $(el);
@@ -65,17 +69,42 @@ export async function crawlBuyHatke(query: string): Promise<BuyHatkeListing[]> {
         ? productHref
         : `https://buyhatke.com${productHref}`;
 
+      let existing = listingsMap.get(productUrl);
+      if (!existing) {
+        existing = {
+          title: "",
+          price: null,
+          imageUrl: null,
+          productUrl,
+          marketplace: null,
+          sellerRating: null
+        };
+        listingsMap.set(productUrl, existing);
+      }
+
+      // 1. Image URL
       const imgElem = card.find("img.product_image").first();
       const imageUrl = imgElem.attr("src") || imgElem.attr("data-src") || null;
+      if (imageUrl && !existing.imageUrl) {
+        existing.imageUrl = imageUrl;
+      }
 
-      const title =
-        imgElem.attr("alt")?.trim() ||
-        card.find("p.font-medium").first().text().trim() ||
-        null;
+      // 2. Product Title
+      const title = imgElem.attr("alt")?.trim() || card.find("p.font-medium").first().text().trim() || null;
+      if (title && (!existing.title || existing.title.length < title.length)) {
+        existing.title = title;
+      }
 
+      // 3. Price
       const priceText = card.find("p.font-semibold.text-base").first().text();
-      const price = parsePrice(priceText); // no fake fallback
+      if (priceText) {
+        const price = parsePrice(priceText);
+        if (price !== null && existing.price === null) {
+          existing.price = price;
+        }
+      }
 
+      // 4. Marketplace logo/store identification
       const logoImg = card.find('img[src*="site_icons_m/"]').first();
       const logoAlt = (logoImg.attr("alt") || "").toLowerCase();
       const logoSrc = (logoImg.attr("src") || "").toLowerCase();
@@ -87,31 +116,29 @@ export async function crawlBuyHatke(query: string): Promise<BuyHatkeListing[]> {
         ["olx", "OLX"],
         ["amazon", "Amazon"],
       ];
-      let marketplace: string | null = null;
       for (const [needle, label] of marketplaceMap) {
         if (logoAlt.includes(needle) || logoSrc.includes(needle)) {
-          marketplace = label;
+          existing.marketplace = label;
           break;
         }
       }
 
+      // 5. Seller Rating
       const ratingText = card.find('p[class*="ff6d20"]').first().text().trim();
-      const sellerRating = ratingText ? parseFloat(ratingText) : null;
-
-      // Skip cards where we couldn't even get a title+price — don't push junk
-      if (!title || price === null) return;
-
-      listings.push({
-        title,
-        price,
-        imageUrl,
-        productUrl,
-        marketplace,
-        sellerRating: isNaN(sellerRating as number) ? null : sellerRating,
-      });
+      if (ratingText) {
+        const ratingVal = parseFloat(ratingText);
+        if (!isNaN(ratingVal) && existing.sellerRating === null) {
+          existing.sellerRating = ratingVal;
+        }
+      }
     });
 
-    console.log(`Parsed ${listings.length} real listings for "${query}"`);
+    // Filter to only complete listings with a valid title and price
+    const listings = Array.from(listingsMap.values()).filter(
+      (item) => item.title && item.price !== null
+    );
+
+    console.log(`Parsed ${listings.length} real grouped listings for "${query}"`);
     cache.set(normQuery, { data: listings, expiry: Date.now() + CACHE_TTL });
     return listings;
   } catch (err) {
