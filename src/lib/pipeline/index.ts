@@ -206,96 +206,42 @@ export async function fetchBuyHatkeListings(
     const scrapedListings = await crawlBuyHatke(query);
     if (!scrapedListings || scrapedListings.length === 0) return [];
 
-    const products: MarketplaceListing[] = [];
-    const colors = ['Space Grey', 'Silver', 'Gold', 'Midnight Blue', 'Titanium'];
-    const ramOptions = ['8 GB', '12 GB', '16 GB'];
-    const storageOptions = ['128 GB', '256 GB', '512 GB'];
-
-    const isAudio = query.toLowerCase().includes('earphone') || query.toLowerCase().includes('earbud') || query.toLowerCase().includes('headphone') || category.toLowerCase().includes('earbud') || category.toLowerCase().includes('earphone') || category.toLowerCase().includes('headphone');
-    const isPhone = query.toLowerCase().includes('phone') || query.toLowerCase().includes('mobile') || query.toLowerCase().includes('smartphone') || category.toLowerCase().includes('phone') || category.toLowerCase().includes('mobile') || category.toLowerCase().includes('smartphone');
-    const isLaptop = query.toLowerCase().includes('laptop') || query.toLowerCase().includes('macbook') || category.toLowerCase().includes('laptop') || category.toLowerCase().includes('macbook');
-
-    const cleanTitleText = (titleStr: string) => {
-      return titleStr
-        .replace(/\s*-\s*Flipkart\.com/i, '')
-        .replace(/\s*-\s*Flipkart/i, '')
-        .replace(/Amazon\.in:\s*/i, '')
-        .replace(/\s*:\s*Amazon\.in/i, '')
-        .replace(/\s*-\s*Amazon\.in/i, '')
-        .replace(/\s*\|\s*Smartprix/i, '')
-        .replace(/\s*-\s*Myntra/i, '')
-        .replace(/\s*-\s*Gadgets\s*360/i, '')
-        .replace(/\s*\|\s*Xerve\s*India/i, '')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#x27;/g, "'")
+    const cleanTitle = (t: string) =>
+      t
+        .replace(/\s*-\s*Flipkart(\.com)?/i, "")
+        .replace(/Amazon\.in:\s*/i, "")
+        .replace(/\s*-\s*Amazon\.in/i, "")
+        .replace(/&amp;/g, "&")
         .trim();
-    };
 
-    scrapedListings.forEach((item, index) => {
-      const title = cleanTitleText(item.title);
-      const price = item.price;
-      const mCode = item.marketplace.toLowerCase().replace(/\s+/g, '');
+    return scrapedListings.map((item) => {
+      const price = item.price ?? 0;
+      const mCode = (item.marketplace ?? 'unknown').toLowerCase().replace(/\s+/g, '');
       const mCodeNormalized = mCode === 'reliancedigital' ? 'reliance' : (mCode === 'tatacliq' ? 'tatacliq' : mCode);
 
-      const marketplaceNames: Record<string, string> = {
-        amazon: 'Amazon',
-        flipkart: 'Flipkart',
-        croma: 'Croma',
-        reliance: 'Reliance Digital',
-        tatacliq: 'Tata CLiQ',
-        olx: 'OLX'
-      };
-      const marketplaceName = marketplaceNames[mCodeNormalized] || item.marketplace;
-
-      // Build specs
-      const color = colors[index % colors.length];
-      const ram = ramOptions[index % ramOptions.length];
-      const storage = storageOptions[index % storageOptions.length];
-
-      const specs = specsToCompare.map(key => {
-        let val = 'Standard';
-        const kLower = key.toLowerCase();
-        if (kLower.includes('capacity') && !isAudio) val = `${250 + index * 5} Liters`;
-        else if (kLower.includes('rating')) val = `${3 + (index % 3)} Star`;
-        else if (kLower.includes('ram')) val = ram;
-        else if (kLower.includes('storage')) val = storage;
-        else if (kLower.includes('camera')) val = `${48 + (index % 3) * 12} MP`;
-        else if (kLower.includes('battery life') || kLower.includes('playtime')) val = `${6 + (index % 4) * 6} Hours`;
-        else if (kLower.includes('battery') && !isAudio) val = `${4000 + (index % 4) * 500} mAh`;
-        else if (kLower.includes('driver')) val = `${8 + (index % 3) * 2} mm Dynamic`;
-        else if (kLower.includes('water') || kLower.includes('ip rating') || kLower.includes('ipx')) val = `IPX${4 + (index % 3)}`;
-        else if (kLower.includes('microphone') || kLower.includes('mic')) val = index % 2 === 0 ? 'Quad Mics with ENC' : 'Dual Mics with ANC';
-        else if (kLower.includes('display')) val = isLaptop ? '15.6" IPS' : '6.7" Super Retina';
-        else if (kLower.includes('size')) val = 'Standard';
-        return { key, value: val };
-      });
-
-      products.push({
-        title,
-        price,
+      return {
+        title: cleanTitle(item.title),
+        price: price,
         deliveryFee: 0,
         discount: 0,
         effectivePrice: price,
         condition: 'NEW',
         url: item.productUrl,
-        warranty: '1 Year Manufacturer Warranty',
-        warrantyMonths: 12,
-        deliveryDays: 1 + (index % 3),
-        returnPolicy: '10 Days Return Policy',
-        sellerName: 'Authorized Retailer',
-        sellerRating: item.sellerRating || 4.5,
-        sellerReviewCount: 150 + index * 20,
-        sellerTrustStatus: 'VERIFIED',
-        marketplaceName,
+        warranty: 'No brand warranty info',
+        warrantyMonths: 0,
+        deliveryDays: 0,
+        returnPolicy: 'Standard return policy',
+        sellerName: 'Unknown Seller',
+        sellerRating: item.sellerRating ?? null,
+        sellerReviewCount: null,
+        sellerTrustStatus: 'UNKNOWN',
+        marketplaceName: item.marketplace ?? "Unknown Seller",
         marketplaceCode: mCodeNormalized,
-        specifications: specs as any,
-        sourceType: 'LIVE_API',
+        specifications: [], // Empty specs - no fabrication!
+        sourceType: "LIVE_API",
         imageUrl: item.imageUrl
-      });
+      };
     });
-
-    return products;
   } catch (err) {
     console.error("fetchBuyHatkeListings error:", err);
   }

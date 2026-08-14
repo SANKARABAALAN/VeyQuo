@@ -431,7 +431,7 @@ export default function Home() {
 
       const scored = listingsToCompare.map(l => {
         const priceScore = maxPrice === minPrice ? 1.0 : 1.0 - ((l.effectivePrice - minPrice) / (maxPrice - minPrice));
-        const ratingScore = l.sellerRating / 5.0;
+        const ratingScore = (l.sellerRating !== null && l.sellerRating !== undefined ? l.sellerRating : 4.0) / 5.0;
 
         // Compute actual spec score
         let specScore = 0.5;
