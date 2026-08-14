@@ -1,0 +1,350 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Product Intelligence - ZUNO AI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&amp;family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "on-secondary": "#00344d",
+                        "surface-tint": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "surface-container-highest": "#343537",
+                        "secondary-container": "#00a2e6",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#38393b",
+                        "surface-container-lowest": "#0d0e10",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#121315",
+                        "background": "#121315",
+                        "secondary-fixed-dim": "#89ceff",
+                        "tertiary-container": "#d97721",
+                        "primary-fixed": "#e1e0ff",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#1f2022",
+                        "surface-container-high": "#292a2c",
+                        "outline": "#908fa0",
+                        "on-surface-variant": "#c7c4d7",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "tertiary": "#ffb783",
+                        "on-secondary-container": "#00344e",
+                        "on-tertiary": "#4f2500",
+                        "on-tertiary-container": "#452000",
+                        "on-surface": "#e3e2e5",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-primary": "#1000a9",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-container": "#0d0096",
+                        "outline-variant": "#464554",
+                        "on-background": "#e3e2e5",
+                        "inverse-on-surface": "#303033",
+                        "surface-variant": "#343537",
+                        "inverse-primary": "#494bd6",
+                        "surface-container-low": "#1b1c1e",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#121315",
+                        "tertiary-fixed": "#ffdcc5",
+                        "inverse-surface": "#e3e2e5",
+                        "secondary": "#89ceff",
+                        "on-error": "#690005",
+                        "primary-container": "#8083ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "container-padding": "32px",
+                        "stack-lg": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #08090B; }
+        .glow-line {
+            box-shadow: 0 0 8px currentColor;
+        }
+        @keyframes flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-flow {
+            background-size: 200% 200%;
+            animation: flow 3s ease infinite;
+        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0; }
+        .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="text-on-background font-body-md text-body-md antialiased min-h-screen">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-20 bg-surface-dim/50 border-b border-white/10 shadow-xl shadow-primary/5">
+<div class="flex items-center gap-stack-md">
+<span class="font-display-lg text-display-lg font-bold tracking-tighter text-primary">ZUNO</span>
+</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Discover</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Compare</a>
+<a class="font-label-sm text-label-sm text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300" href="#">Insights</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Watchlist</a>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="scale-95 active:scale-90 transition-transform w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined">smart_toy</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A striking portrait of a sophisticated C-suite executive user profile, bathed in subtle neon edge-lighting against a deep matte black void. The lighting emphasizes a modern, high-tech corporate aesthetic, utilizing high-contrast cinematic techniques and a predominantly cool-toned cybernetic palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_8V97tGBjMr2EKfqUbqVKiOZe0XWnduBvMHdw9-wM_OtdLTRLNAwPrdk8nXJ_97h22uA8UX9wQY_rx4ujvN32Tfw32tyuhZfxXi6k814jeu_yybSwj7znsJNGRg1BhGZXujtaFwMYYs64D_XaW34M1Vrfmj6YSnBEGLg7cyt-ZY0loK-YoBG-6ER8kA2VOlr-PlvpVNR1COuHHjNmhTCjBY4JHuJQa9mxhnR3hLIAAgl-8W0s319mlQ">
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="hidden xl:flex bg-surface-container-low/95 backdrop-blur-2xl fixed left-0 top-0 h-full z-40 flex flex-col p-stack-md docked left-0 h-screen w-80 bg-surface-container-low border-r border-white/5 shadow-2xl shadow-black/50 pt-28">
+<div class="mb-stack-lg px-4">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container flex items-center justify-center mb-stack-sm shadow-[0_0_15px_rgba(192,193,255,0.2)]">
+<span class="material-symbols-outlined filled text-on-primary-container">psychology</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg font-black text-primary">ZUNO AI</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Decision Intelligence</p>
+</div>
+<div class="flex-1 flex flex-col gap-unit">
+<a class="flex items-center gap-3 font-title-md text-title-md text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">explore</span>
+                Discover
+            </a>
+<a class="flex items-center gap-3 font-title-md text-title-md text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+                Compare
+            </a>
+<a class="flex items-center gap-3 font-title-md text-title-md text-primary font-bold bg-primary/10 rounded-xl px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Insights
+            </a>
+<a class="flex items-center gap-3 font-title-md text-title-md text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">visibility</span>
+                Watchlist
+            </a>
+</div>
+<button class="mt-auto w-full py-3 px-4 rounded-xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all font-title-md text-title-md flex items-center justify-center gap-2 mb-stack-lg">
+<span class="material-symbols-outlined">auto_awesome</span> Ask AI Assistant
+        </button>
+<div class="flex flex-col gap-unit border-t border-white/5 pt-stack-sm">
+<a class="flex items-center gap-3 font-title-md text-title-md text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 font-title-md text-title-md text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="xl:ml-80 pt-28 p-container-padding max-w-[1600px] mx-auto min-h-screen">
+<!-- Header Section -->
+<header class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+                        Product Intelligence
+                    </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 font-label-sm text-label-sm text-primary shadow-[0_0_10px_rgba(192,193,255,0.15)]">
+<span class="material-symbols-outlined filled text-[14px]">verified</span>
+                        98.7% SAME PRODUCT
+                    </span>
+</div>
+<h1 class="font-display-lg text-display-lg md:text-[56px] md:leading-[64px] text-on-surface">Sony Alpha a7 IV</h1>
+<p class="font-title-md text-title-md text-on-surface-variant mt-2">Mirrorless Camera (ILCE-7M4/B)</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 rounded-xl bg-surface-container-high border border-outline-variant hover:border-primary/50 transition-colors font-title-md text-title-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined">edit_note</span> Edit Canonical
+                </button>
+<button class="px-6 py-3 rounded-xl bg-primary text-on-primary hover:bg-primary-fixed-dim transition-colors font-title-md text-title-md font-medium shadow-[0_0_20px_rgba(192,193,255,0.2)] flex items-center gap-2">
+<span class="material-symbols-outlined">sync</span> Sync Specs
+                </button>
+</div>
+</header>
+<!-- Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Col: Product Visual -->
+<div class="md:col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<div class="rounded-[32px] bg-surface-container-lowest border border-white/5 overflow-hidden shadow-2xl relative group h-[400px]">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#050506] z-10 pointer-events-none"></div>
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A meticulously rendered high-end mirrorless digital camera floating weightlessly in a volumetric dark space. The camera body features hyper-realistic metallic and carbon fiber textures, illuminated by a solitary dramatic top-light and subtle indigo rim lights. The mood is clinical, hyper-modern, and intensely focused on technical precision within a cinematic dark-mode aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqh93Gp_vboCoox3wxtghFGx22zmHYz4X2YUGxXdOxrHWSESAgvuPKOxMja_q8YPn3xJoa_iwVbIkHhWTDAmzAVVJZT5UrDAaLXopFtAgAbuGe4eKX2ZiMN__I6btaI-31v3hrJOJhiW_KPyV598I12dVNrRsst3So9cFQ_hMIkrZ46U_d2BjQTPXTUiErZXkUxKzog19BCXqR4igJd6OBjVw1iNoLD-hmJJoR3qfPpOw01Jc8xLpz-A')"></div>
+<div class="absolute bottom-6 left-6 right-6 z-20 flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Master Record</span>
+<span class="font-title-md text-title-md text-on-surface">Source ID: SONY-7M4-US</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-white">open_in_full</span>
+</button>
+</div>
+</div>
+<div class="rounded-[24px] bg-[#101216] border border-white/5 p-stack-md flex flex-col justify-center relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
+<h3 class="font-title-md text-title-md text-on-surface mb-1">Global Sentiment</h3>
+<div class="flex items-end gap-3 mt-2">
+<span class="font-display-lg text-display-lg text-primary leading-none">4.8</span>
+<span class="font-body-md text-body-md text-on-surface-variant pb-1">/ 5.0 (12k+ reviews)</span>
+</div>
+</div>
+</div>
+<!-- Mid Col: Normalized Specs -->
+<div class="md:col-span-12 lg:col-span-5 rounded-[32px] bg-[#050506] border border-white/5 p-stack-md relative overflow-hidden shadow-2xl flex flex-col">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+<div class="flex justify-between items-center mb-stack-md px-2">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">data_table</span>
+                        Normalized Specifications
+                    </h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Live Pipeline</span>
+</div>
+<div class="flex-1 flex flex-col gap-unit">
+<!-- Spec Row 1 -->
+<div class="group flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-white/5">
+<div class="w-1/3 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Raw Input (Source A)</span>
+<span class="font-body-md text-body-md text-on-surface opacity-60">33.0 MP</span>
+</div>
+<div class="w-1/6 flex justify-center">
+<span class="material-symbols-outlined text-primary/50 group-hover:text-primary transition-colors group-hover:translate-x-1 transform duration-300">arrow_forward</span>
+</div>
+<div class="w-1/2 flex flex-col pl-4 border-l border-white/5">
+<span class="font-label-sm text-label-sm text-primary mb-1">Canonical Property</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">33.0 Megapixels</span>
+</div>
+</div>
+<!-- Spec Row 2 -->
+<div class="group flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-white/5 bg-[#101216]/50">
+<div class="w-1/3 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Raw Input (Source B)</span>
+<span class="font-body-md text-body-md text-on-surface opacity-60 line-through">4K60p 10-bit</span>
+</div>
+<div class="w-1/6 flex justify-center relative">
+<div class="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-secondary-container to-transparent top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-secondary-container group-hover:translate-x-1 transform duration-300 relative z-10">auto_fix</span>
+</div>
+<div class="w-1/2 flex flex-col pl-4 border-l border-white/5">
+<span class="font-label-sm text-label-sm text-secondary-container mb-1">Resolved AI Property</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">4K 60p (10-bit 4:2:2)</span>
+</div>
+</div>
+<!-- Spec Row 3 -->
+<div class="group flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-white/5">
+<div class="w-1/3 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Raw Input (Source C)</span>
+<span class="font-body-md text-body-md text-on-surface opacity-60">E-Mount (Sony)</span>
+</div>
+<div class="w-1/6 flex justify-center">
+<span class="material-symbols-outlined text-primary/50 group-hover:text-primary transition-colors group-hover:translate-x-1 transform duration-300">arrow_forward</span>
+</div>
+<div class="w-1/2 flex flex-col pl-4 border-l border-white/5">
+<span class="font-label-sm text-label-sm text-primary mb-1">Canonical Property</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Sony E</span>
+</div>
+</div>
+<!-- Spec Row 4 -->
+<div class="group flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-white/5">
+<div class="w-1/3 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Raw Input (Source A)</span>
+<span class="font-body-md text-body-md text-on-surface opacity-60">IBIS</span>
+</div>
+<div class="w-1/6 flex justify-center">
+<span class="material-symbols-outlined text-primary/50 group-hover:text-primary transition-colors group-hover:translate-x-1 transform duration-300">arrow_forward</span>
+</div>
+<div class="w-1/2 flex flex-col pl-4 border-l border-white/5">
+<span class="font-label-sm text-label-sm text-primary mb-1">Canonical Property</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">5-Axis Sensor-Shift</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Col: Data Quality Panel -->
+<div class="md:col-span-12 lg:col-span-3 flex flex-col gap-gutter">
+<div class="rounded-[24px] bg-[#181B21] border border-white/10 p-stack-md shadow-xl flex flex-col items-center text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-50 mix-blend-overlay"></div>
+<h4 class="font-title-md text-title-md text-on-surface mb-6 relative z-10">Match Confidence</h4>
+<div class="relative w-32 h-32 mb-4 z-10">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary glow-line transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="42" stroke="currentColor" stroke-dasharray="263.89" stroke-dashoffset="3.43" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="font-headline-lg text-headline-lg text-on-surface">98<span class="text-[16px] text-on-surface-variant">.7%</span></span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary bg-primary/10 px-3 py-1 rounded-full relative z-10">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                        High Certainty
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-unit">
+<div class="rounded-[16px] bg-surface-container-low border border-white/5 p-4 flex flex-col items-center justify-center text-center hover:bg-surface-container transition-colors cursor-default">
+<div class="relative w-16 h-16 mb-2">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary-container transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="15.07" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-title-md text-title-md text-on-surface text-[14px]">94%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Data<br>Completeness</span>
+</div>
+<div class="rounded-[16px] bg-surface-container-low border border-white/5 p-4 flex flex-col items-center justify-center text-center hover:bg-surface-container transition-colors cursor-default">
+<div class="relative w-16 h-16 mb-2">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary-container transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="12.56" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-title-md text-title-md text-on-surface text-[14px]">95%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Rec.<br>Confidence</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

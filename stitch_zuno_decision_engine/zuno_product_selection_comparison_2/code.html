@@ -1,0 +1,402 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VEYQUO - Product Selection Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#292a2c",
+                        "inverse-surface": "#e3e2e5",
+                        "surface-tint": "#c0c1ff",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "surface-variant": "#343537",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-tertiary-fixed": "#301400",
+                        "surface-bright": "#38393b",
+                        "error": "#ffb4ab",
+                        "on-tertiary": "#4f2500",
+                        "on-surface": "#e3e2e5",
+                        "on-secondary": "#00344d",
+                        "on-tertiary-container": "#452000",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#07006c",
+                        "on-secondary-container": "#00344e",
+                        "tertiary-container": "#d97721",
+                        "surface-container-lowest": "#0d0e10",
+                        "surface-container-highest": "#343537",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-background": "#e3e2e5",
+                        "secondary": "#89ceff",
+                        "background": "#121315",
+                        "primary-fixed": "#e1e0ff",
+                        "surface-container-low": "#1b1c1e",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#c9e6ff",
+                        "secondary-fixed-dim": "#89ceff",
+                        "on-primary-container": "#0d0096",
+                        "on-error-container": "#ffdad6",
+                        "inverse-primary": "#494bd6",
+                        "secondary-container": "#00a2e6",
+                        "surface": "#121315",
+                        "primary": "#c0c1ff",
+                        "surface-container": "#1f2022",
+                        "inverse-on-surface": "#303033",
+                        "outline-variant": "#464554",
+                        "outline": "#908fa0",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "error-container": "#93000a",
+                        "tertiary": "#ffb783",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "on-surface-variant": "#c7c4d7",
+                        "surface-dim": "#121315",
+                        "on-primary": "#1000a9",
+                        "primary-container": "#8083ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "stack-lg": "40px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "container-padding": "32px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(18, 19, 21, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .ai-glow {
+            box-shadow: 0 0 40px rgba(192, 193, 255, 0.15);
+        }
+        .glow-line {
+            position: relative;
+        }
+        .glow-line::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            box-shadow: 0 0 8px currentColor;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-container-padding h-20 bg-surface/80 backdrop-blur-xl bg-surface-dim/50 shadow-xl shadow-primary/5">
+<div class="flex items-center gap-stack-lg">
+<img alt="VEYQUO Logo" class="h-10 w-auto object-contain rounded-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJysz71znSHIQAwlpVKeX-WNBxyHqB6JTePjPmNv2QHFRcsAi2FriRcfGDFWTLqThVpQIrKNiWWZn7apWzjG6XmrrrieYVWr1jFvQ1rPNLcbb95PN2p97_YgUzWYerfYYAZCLX7c2t1mgVpbYQifTU_yQWG03CbRDrFJdXSDFxQogv5QrHSgiMbziqBzdzc5BJ5aAtUFl20g_Iv0lOXO-pWommfNT8FDjGu6aBMlp9vct1qIiilczN9Q">
+<div class="hidden md:flex gap-stack-md">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="#">Discover</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm" href="#">Compare</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="#">Insights</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="#">Watchlist</a>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-low border border-outline-variant hover:border-primary transition-colors text-on-surface hidden md:flex">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</button>
+<button class="w-10 h-10 flex md:hidden items-center justify-center rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary transition-colors text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<img alt="Executive User Profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A highly detailed close-up portrait of an executive user, styled in a sleek, cinematic, high-end professional manner. The lighting should be moody, with a mix of deep shadows and sharp, cool highlights, perfectly suited for a premium dark mode UI. The background should be a subtle, out-of-focus abstract tech space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHXDKVbfSDyDS-BqVVJyajMeVqtBMuO8KXZKEXzxjL2ZXYYqZ4H1fX4lOfaX6bzUATWvScn7zjx5atD8_7u7ySbQ6tdrp8RnWCIfxlYldxo5eXah5ucNJtHWgHBQuXlw3UlhBsolTMRCiUzhaB8-0RvKBdAxx2GEGNSq1RzYmkXVJJQ6__3GmIVMLeLdCeyQa05CHlC_m-OwnwGZ-o0pQG_VEi_1uDG2EU0KZEvmgwNgbEoP3jddL66g">
+</div>
+</nav>
+<!-- Side Navigation Bar (Hidden on Mobile) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col p-stack-md bg-surface-container-low/95 backdrop-blur-2xl bg-surface-container-low border-r border-white/5 shadow-2xl shadow-black/50 docked left-0 h-screen w-80 pt-28 hidden md:flex">
+<div class="mb-stack-lg px-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-sm">smart_toy</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface m-0">VEYQUO AI</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Decision Intelligence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-sm text-label-sm">Discover</span>
+</a>
+<a class="flex items-center gap-3 text-primary font-bold bg-primary/10 rounded-xl px-4 py-3 translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="font-label-sm text-label-sm">Compare</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">visibility</span>
+<span class="font-label-sm text-label-sm">Watchlist</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2 pt-stack-md border-t border-white/5">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+<button class="mt-4 w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-title-md text-title-md font-bold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">smart_toy</span>
+                Ask AI Assistant
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pt-28 md:pl-[320px] px-4 md:px-container-padding pb-stack-lg min-h-screen">
+<!-- Header -->
+<header class="mb-stack-lg">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="font-label-sm text-label-sm">Compare</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-sm text-label-sm text-primary">Headphones</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg font-bold mb-4">boAt Headphones Matrix</h1>
+<!-- Oversized Search Input -->
+<div class="relative max-w-2xl group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="w-full h-16 pl-12 pr-4 bg-[#050506] border border-white/10 rounded-xl text-on-surface placeholder-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all font-title-md text-title-md shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] group-focus-within:shadow-[inset_0_0_20px_rgba(192,193,255,0.05)]" type="text" value="boAt Headphones">
+<button class="absolute inset-y-0 right-2 my-auto h-12 px-4 md:px-6 bg-surface-container-highest hover:bg-surface-variant text-on-surface rounded-lg font-label-sm text-label-sm transition-colors border border-white/5">
+                    Refine
+                </button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Matrix & Grid (Col span 8) -->
+<div class="lg:col-span-8 space-y-stack-lg">
+<!-- Product Grid (Results) -->
+<section>
+<div class="flex justify-between items-end mb-stack-md">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Suggested Models</h3>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-outline hover:text-on-surface cursor-pointer">grid_view</span>
+<span class="material-symbols-outlined text-primary cursor-pointer">view_list</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-stack-md">
+<!-- Product Card 1 -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10">
+<div class="absolute top-4 right-4 z-10">
+<div class="bg-surface-container-lowest/80 backdrop-blur-sm border border-primary/30 rounded-full px-2 py-1 flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-primary text-[10px]">Top Pick</span>
+</div>
+</div>
+<div class="h-40 w-full mb-4 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/5">
+<img alt="boAt Rockerz 550" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" data-alt="A sleek, high-end product shot of black wireless over-ear headphones, perfectly lit against a pitch-black background with a subtle, neon indigo rim light. The style should be cinematic and premium, highlighting the premium matte finish and ergonomic curves of the ear cups." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT9CH_-drtZXMrkmuOY_wW7MAngKWgMmnGmArma-zfWwh708NN_mNrY-9DSIsM58x1ph7G3gW2lLLzisGIpZgWQYxuRpgRtQBQjoMxIesOswmQamJsy_5eHofWbEth3Uby48xyYzuNheDjstKa4kVxBTlZ2Hwp-E7YfOPEGN_StlIr2bxRQd4aIExIhzBHZcr7kMG331nH6M0E8aeKbhe0eAmvqTkpSZ7EEbjyh2Q1aDURHC55bTK5Ag">
+</div>
+<h4 class="font-title-md text-title-md font-semibold text-on-surface mb-1">Rockerz 550</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">Over-Ear Wireless</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="font-headline-lg text-headline-lg-mobile text-on-surface">$24.99</span>
+<span class="text-xs text-outline line-through">$49.99</span>
+</div>
+<button class="mt-auto w-full py-2.5 rounded-lg border border-primary/50 text-primary font-label-sm text-label-sm font-semibold hover:bg-primary/10 transition-colors flex items-center justify-center gap-2 group/btn">
+                                Deep Analysis
+                                <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<!-- Product Card 2 -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10">
+<div class="h-40 w-full mb-4 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/5">
+<img alt="boAt Nirvana 751 ANC" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" data-alt="A dramatic product photography shot of sleek navy blue active noise cancelling wireless headphones. The lighting is sophisticated, creating a soft gradient across the metallic accents, set against a dark, moody background characteristic of a high-end tech presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL_E3eKrHOiug6s-dDqWZhiIxSmWL_ukSTv07Jrw47a-fyWe002NUYeBU5XqXP4cZTGmDfSiPc-6avSzLP3ygw-JtJq1z4QFe9Nc5802NOTo3w9U1XkN_Yzq4x27E1Iq6bBBXfk79uCtSPzqO5nrjqtg5L0X-nBv-5ilnI1-vMsSt3euBmFjUmxrgHiid5J9DlubP4YRuT-CiGnoi6n9yZjfX01xPi8Ux_K8gfGNFRL3Xwe9HX9rl3yA">
+</div>
+<h4 class="font-title-md text-title-md font-semibold text-on-surface mb-1">Nirvana 751 ANC</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">Hybrid ANC Over-Ear</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="font-headline-lg text-headline-lg-mobile text-on-surface">$45.00</span>
+<span class="text-xs text-outline line-through">$89.99</span>
+</div>
+<button class="mt-auto w-full py-2.5 rounded-lg bg-surface-container hover:bg-surface-container-highest border border-outline-variant text-on-surface font-label-sm text-label-sm font-semibold transition-colors">
+                                View Details
+                            </button>
+</div>
+<!-- Product Card 3 -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10">
+<div class="h-40 w-full mb-4 rounded-xl bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/5">
+<img alt="boAt Airdopes 411" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" data-alt="A premium close-up shot of minimalist white true wireless earbuds resting in their charging case. The environment is dark and atmospheric, with a faint, futuristic cyan glow illuminating the edges of the case, emphasizing the sleek, modern industrial design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWv9JT-EBCDSFrYyjYJoo3ORuD3dvn6Z3ayu6sfeKyUYN09vQR5N1Hz3vg-h-FO0Ixc1Lc1YmZZQdfbxj2Dx1SL1c1FUjVdU93jyig83v5EwX_-w6-jZRuAbUcXND8bL8Z2BbjHwOSAC4KkPKXULOjqcU9AxaCvh-XJ19UrrLwP7JhThOC5-SCuLKz_HCb0sQn0DxYpQUjRSicZrkkdOwfqIYnsZXmY4uZV6OAbQB4dtAjeTDGyXW7Bg">
+</div>
+<h4 class="font-title-md text-title-md font-semibold text-on-surface mb-1">Airdopes 411</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4">In-Ear TWS ANC</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="font-headline-lg text-headline-lg-mobile text-on-surface">$29.99</span>
+</div>
+<button class="mt-auto w-full py-2.5 rounded-lg bg-surface-container hover:bg-surface-container-highest border border-outline-variant text-on-surface font-label-sm text-label-sm font-semibold transition-colors">
+                                View Details
+                            </button>
+</div>
+</div>
+</section>
+<!-- Comparison Matrix -->
+<section>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold mb-stack-md flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">tune</span>
+                        Feature Comparison Matrix
+                    </h3>
+<div class="glass-panel rounded-2xl p-1 overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[600px]">
+<thead>
+<tr class="border-b border-white/10 text-on-surface-variant font-label-sm text-label-sm">
+<th class="py-4 px-4 font-medium">Feature</th>
+<th class="py-4 px-4 font-medium text-center">Rockerz 550</th>
+<th class="py-4 px-4 font-medium text-center">Nirvana 751</th>
+<th class="py-4 px-4 font-medium text-center">Airdopes 411</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="py-4 px-4 font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">speaker</span> Sound Profile
+                                    </td>
+<td class="py-4 px-4 text-center">Bass Heavy (50mm)</td>
+<td class="py-4 px-4 text-center text-primary font-medium glow-line">Balanced (40mm)</td>
+<td class="py-4 px-4 text-center text-outline">V-Shape (10mm)</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="py-4 px-4 font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">battery_charging_full</span> Battery Life
+                                    </td>
+<td class="py-4 px-4 text-center text-primary font-medium glow-line">20 Hours</td>
+<td class="py-4 px-4 text-center">65 Hours (ANC off)</td>
+<td class="py-4 px-4 text-center text-outline">17.5 Hours</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="py-4 px-4 font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">noise_control_off</span> ANC
+                                    </td>
+<td class="py-4 px-4 text-center text-outline">Passive</td>
+<td class="py-4 px-4 text-center text-primary font-medium glow-line">Hybrid (33dB)</td>
+<td class="py-4 px-4 text-center">Active (25dB)</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="py-4 px-4 font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">speed</span> VEYQUO Score
+                                    </td>
+<td class="py-4 px-4">
+<div class="flex items-center justify-center gap-2">
+<span class="text-primary font-bold">84</span>
+<div class="w-12 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 84%"></div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center justify-center gap-2">
+<span class="text-secondary font-bold">92</span>
+<div class="w-12 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 92%"></div>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<div class="flex items-center justify-center gap-2">
+<span class="text-outline font-bold">78</span>
+<div class="w-12 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-outline" style="width: 78%"></div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Right Column: AI Sidebar (Col span 4) -->
+<div class="lg:col-span-4">
+<div class="sticky top-28 bg-[#181B21] border border-primary/20 rounded-2xl p-6 ai-glow relative overflow-hidden mt-8 lg:mt-0">
+<!-- Glassmorphic ambient background effect -->
+<div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-[40px] pointer-events-none"></div>
+<div class="flex items-center gap-3 mb-6 relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-primary font-semibold">Assistant Recommendation</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Analyzed 12 parameters</p>
+</div>
+</div>
+<div class="bg-[#050506] border border-white/5 rounded-xl p-5 mb-6 relative z-10">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed mb-4">
+                            "Based on your focus on <span class="text-primary font-medium">Battery Life</span> and <span class="text-primary font-medium">Bass</span>, I recommend the <strong>boAt Rockerz 550</strong>. It offers 20% more playback time for a similar price point compared to alternatives in this segment."
+                        </p>
+<!-- Mini Radar/Gauge Concept -->
+<div class="flex items-center justify-between pt-4 border-t border-white/10">
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm text-outline mb-1">Bass Match</span>
+<div class="w-10 h-10 rounded-full border-2 border-surface-container flex items-center justify-center relative">
+<svg class="absolute inset-0 w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="85, 100" stroke-width="2"></path>
+</svg>
+<span class="font-label-sm text-label-sm font-bold text-on-surface">95%</span>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm text-outline mb-1">Value Match</span>
+<div class="w-10 h-10 rounded-full border-2 border-surface-container flex items-center justify-center relative">
+<svg class="absolute inset-0 w-full h-full -rotate-90 transform" viewBox="0 0 36 36">
+<path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="90, 100" stroke-width="2"></path>
+</svg>
+<span class="font-label-sm text-label-sm font-bold text-on-surface">90%</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-title-md text-title-md font-bold hover:bg-primary-fixed transition-colors flex items-center justify-center gap-2 relative z-10 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/40 group">
+                        Deep Analysis &amp; Comparison
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">open_in_new</span>
+</button>
+<p class="text-center font-label-sm text-label-sm text-outline mt-3 relative z-10">Searches live marketplace data</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

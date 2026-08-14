@@ -1,0 +1,402 @@
+<!DOCTYPE html><html class="dark" lang="en"><head></head><body class="bg-background text-on-background font-body-md min-h-screen flex selection:bg-primary selection:text-on-primary antialiased"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Cross-Marketplace Intelligence | ZUNO</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#004c6e",
+                      "on-secondary": "#00344d",
+                      "surface-tint": "#c0c1ff",
+                      "primary": "#c0c1ff",
+                      "surface-container-highest": "#343537",
+                      "secondary-container": "#00a2e6",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "surface-bright": "#38393b",
+                      "surface-container-lowest": "#0d0e10",
+                      "on-error-container": "#ffdad6",
+                      "surface": "#121315",
+                      "background": "#121315",
+                      "secondary-fixed-dim": "#89ceff",
+                      "tertiary-container": "#d97721",
+                      "primary-fixed": "#e1e0ff",
+                      "error-container": "#93000a",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container": "#1f2022",
+                      "surface-container-high": "#292a2c",
+                      "outline": "#908fa0",
+                      "on-surface-variant": "#c7c4d7",
+                      "secondary-fixed": "#c9e6ff",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "tertiary": "#ffb783",
+                      "on-secondary-container": "#00344e",
+                      "on-tertiary": "#4f2500",
+                      "on-tertiary-container": "#452000",
+                      "on-surface": "#e3e2e5",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "on-secondary-fixed": "#001e2f",
+                      "on-primary": "#1000a9",
+                      "on-tertiary-fixed": "#301400",
+                      "on-primary-fixed": "#07006c",
+                      "on-primary-container": "#0d0096",
+                      "outline-variant": "#464554",
+                      "on-background": "#e3e2e5",
+                      "inverse-on-surface": "#303033",
+                      "surface-variant": "#343537",
+                      "inverse-primary": "#494bd6",
+                      "surface-container-low": "#1b1c1e",
+                      "error": "#ffb4ab",
+                      "surface-dim": "#121315",
+                      "tertiary-fixed": "#ffdcc5",
+                      "inverse-surface": "#e3e2e5",
+                      "secondary": "#89ceff",
+                      "on-error": "#690005",
+                      "primary-container": "#8083ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "container-padding": "32px",
+                      "stack-lg": "40px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "label-sm": ["Geist"],
+                      "headline-lg": ["Inter"],
+                      "title-md": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Custom glow effects and micro-interactions */
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(27,28,30,0.8) 0%, rgba(18,19,21,0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .neon-glow-line {
+            filter: drop-shadow(0 0 6px var(--tw-colors-primary));
+        }
+        .zuno-score-arc {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 15; /* Example value for 85 score */
+            transition: stroke-dashoffset 1s ease-out;
+        }
+        /* Custom Scrollbar for sleekness */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--tw-colors-background); }
+        ::-webkit-scrollbar-thumb { background: var(--tw-colors-surface-container-highest); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--tw-colors-outline-variant); }
+    </style>
+
+
+<!-- Shared Component: SideNavBar -->
+<nav class="hidden md:flex flex-col z-40 p-stack-md bg-surface-container-low/95 backdrop-blur-2xl border-r border-white/5 shadow-2xl shadow-black/50 fixed left-0 top-0 h-full w-80">
+<!-- Header -->
+<div class="flex items-center gap-stack-sm mb-stack-lg px-2">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-inverse-primary p-[1px]">
+<img class="w-full h-full object-cover rounded-xl" data-alt="A sleek, futuristic abstract 3D metallic sphere floating against a pure black background, illuminated by subtle cool blue and vibrant indigo rim lighting, representing an advanced AI core in a high-tech corporate environment. The image is hyper-realistic with sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3M1bdGynstXAD1cRIj3c9r1YsjitjW6U7oeMcjbK1AkHaHYgEBdxp91aNcM8wcedO54lbxZpYtQCGJtIWONFh8QUao_V0aY_g1wkqiRn08WH3NxGRqXJHK1Gm9XdB-lQMPci0RpA3-LOvoa49qjtAEBQpbmNyTjNJhRAXyc8J--MXWr6ZuzGCVlLy1EloRUI4z319szxv9nfNNhXXyus0-LlimR2oq6HMbSrUDiAOnqAI6GF2CUvmig">
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg font-black text-primary tracking-tighter leading-none">ZUNO AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mt-1">Decision Intelligence</p>
+</div>
+</div>
+<!-- CTA -->
+<button class="mb-stack-lg w-full bg-primary text-on-primary font-title-md text-title-md py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors shadow-[0_0_15px_rgba(192,193,255,0.2)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_back_ios_new</span>
+            Ask AI Assistant
+        </button>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-2 flex-1">
+<!-- Discover -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-title-md text-title-md">Discover</span>
+</a>
+<!-- Compare (Active State based on Semantic Mapping to "Cross-Marketplace Intelligence") -->
+<a class="flex items-center gap-3 text-primary font-bold bg-primary/10 rounded-xl px-4 py-3 translate-x-1 transition-transform border-l-2 border-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">compare_arrows</span>
+<span class="font-title-md text-title-md">Compare</span>
+</a>
+<!-- Insights -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-title-md text-title-md">Insights</span>
+</a>
+<!-- Watchlist -->
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1" href="#">
+<span class="material-symbols-outlined">visibility</span>
+<span class="font-title-md text-title-md">Watchlist</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-col gap-2 mt-auto pt-stack-md border-t border-white/5">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-md text-title-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-title-md text-title-md">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="ml-0 md:ml-80 flex-1 p-stack-md md:p-container-padding flex flex-col gap-stack-lg max-w-[1600px] w-full">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-stack-md border-b border-white/10 pb-stack-md">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    Live Market Intelligence
+                </p>
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight max-w-2xl">One product.<br>Every marketplace.</h2>
+</div>
+<!-- Canonical Product Visual Card -->
+<div class="glass-panel p-4 rounded-2xl flex items-center gap-stack-md w-full md:w-auto min-w-[300px]">
+<div class="w-20 h-20 bg-surface-container-lowest rounded-lg border border-white/5 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover mix-blend-lighten opacity-90" data-alt="A studio-quality, dramatic dark-mode product shot of premium over-ear noise-canceling headphones resting on a reflective black acrylic surface. The headphones are matte black, illuminated by a sharp, thin rim light of deep indigo and cyan, casting long, cinematic shadows in a void-like environment. Highly detailed, 8k resolution, minimalist tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPytuCWP2cXgKMtHUr5tHZCFml3J-FeXy_Sp0WlgMNpyTA4GuVWhPEaIxjN-5tg5FSKy0AQ8b_-GvDVGV-RCLB3ggjtOdGAxhF1qs81RlQL4Z8vm9imUUYkK0is8vI60q8-vw0paz5S6Sygz9IMgGgZVifueOUlXomahNGpbUCx-1DC7OSWzVt1-lnMyAdlNti_CANRw5qpLhrEG-Az_8Jw3k5IphNL6NFm39_OTudHshl2Ngix54MfA">
+</div>
+<div class="flex flex-col justify-center">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Aura Pro Max 900</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Global MSRP: $499.00</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="px-2 py-1 bg-surface-container-highest rounded text-[10px] font-bold text-on-surface uppercase tracking-wider">Audio</span>
+<span class="px-2 py-1 bg-surface-container-highest rounded text-[10px] font-bold text-on-surface uppercase tracking-wider">Flagship</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Price Landscape Visualization -->
+<section class="glass-panel rounded-3xl p-stack-md flex flex-col relative overflow-hidden h-[240px]">
+<div class="flex justify-between items-center mb-4 z-10">
+<h4 class="font-title-md text-title-md text-on-surface">Price Landscape (30 Days)</h4>
+<div class="flex gap-4">
+<div class="flex items-center gap-2"><span class="w-3 h-[2px] bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Avg Market Price</span></div>
+<div class="flex items-center gap-2"><span class="w-3 h-[2px] bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Best Available</span></div>
+</div>
+</div>
+<!-- Abstract Chart Area -->
+<div class="absolute inset-0 top-16 bottom-4 left-4 right-4 z-0">
+<!-- Grid Lines -->
+<div class="w-full h-full border-b border-white/5 flex flex-col justify-between absolute inset-0 pb-4">
+<div class="w-full border-t border-white/5 h-0"></div>
+<div class="w-full border-t border-white/5 h-0"></div>
+<div class="w-full border-t border-white/5 h-0"></div>
+</div>
+<!-- SVG Line Chart Simulation -->
+<svg class="w-full h-full absolute inset-0 z-10 pb-4" preserveAspectRatio="none" viewBox="0 0 1000 100">
+<!-- Area Fill -->
+<defs>
+<linearGradient id="primaryArea" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="var(--tw-colors-primary)" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="var(--tw-colors-background)" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<!-- Average Line -->
+<path class="neon-glow-line" d="M0,40 Q150,45 300,35 T600,45 T1000,30" fill="none" stroke="var(--tw-colors-primary)" stroke-opacity="0.5" stroke-width="2"></path>
+<!-- Best Available Line (Lower) -->
+<path d="M0,60 Q100,65 250,55 T550,75 T1000,50" fill="url(#primaryArea)"></path>
+<path class="neon-glow-line" d="M0,60 Q100,65 250,55 T550,75 T1000,50" fill="none" stroke="var(--tw-colors-secondary)" stroke-width="2"></path>
+<!-- Current Point Indicator -->
+<circle class="neon-glow-line animate-pulse" cx="1000" cy="50" fill="var(--tw-colors-secondary)" r="4"></circle>
+</svg>
+</div>
+</section>
+<!-- Data Grid Header -->
+<div class="grid grid-cols-12 gap-gutter px-stack-md py-2 border-b border-white/10 hidden lg:grid">
+<div class="col-span-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Marketplace</div>
+<div class="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase">Price (Effective)</div>
+<div class="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase">Seller / Trust</div>
+<div class="col-span-3 font-label-sm text-label-sm text-on-surface-variant uppercase">Terms (Del / War / Ret)</div>
+<div class="col-span-2 font-label-sm text-label-sm text-on-surface-variant uppercase text-right">ZUNO Score</div>
+</div>
+<!-- SECTION: NEW -->
+<section class="flex flex-col gap-2">
+<div class="flex items-center gap-3 mb-2">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold tracking-wide">NEW</h3>
+<div class="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+</div>
+<!-- ROW 1: Best Value (Amazon Example) -->
+<div class="relative grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-gutter p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors items-center group">
+<!-- Highlight Badge -->
+<div class="absolute -top-3 left-6 bg-primary text-on-primary px-3 py-1 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-1 shadow-[0_0_10px_rgba(192,193,255,0.4)]">
+<span class="material-symbols-outlined text-[14px]">military_tech</span> BEST VALUE
+                </div>
+<!-- Marketplace -->
+<div class="col-span-3 flex items-center gap-3 mt-2 lg:mt-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest border border-white/5 flex items-center justify-center text-on-surface font-bold text-lg">A</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">Amazon</p>
+<p class="font-label-sm text-label-sm text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">verified</span> Prime Partner</p>
+</div>
+</div>
+<!-- Price -->
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-headline-lg text-headline-lg text-primary leading-none">$429.00</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 line-through opacity-70">List: $499.00</p>
+</div>
+<!-- Seller -->
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-body-md text-body-md text-on-surface">ElectroWorld Inc.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">4.9 <span class="material-symbols-outlined text-[12px] text-tertiary">star</span> (12k+ ratings)</p>
+</div>
+<!-- Terms -->
+<div class="col-span-3 flex flex-wrap gap-2 items-center">
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> 1-Day</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">security</span> 2yr Mfg</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">sync</span> 30d Free</span>
+</div>
+<!-- Score -->
+<div class="col-span-2 flex justify-end items-center gap-3">
+<div class="text-right">
+<p class="font-title-md text-title-md text-primary font-bold">98/100</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Exceptional</p>
+</div>
+<!-- Circular Gauge -->
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-surface-container-highest)" stroke-width="3"></circle>
+<circle class="neon-glow-line" cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-primary)" stroke-dasharray="98, 100" stroke-width="3"></circle>
+</svg>
+</div>
+</div>
+</div>
+<!-- ROW 2: Official Store -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-gutter p-4 rounded-2xl bg-surface-container-low border border-white/5 hover:bg-surface-container transition-colors items-center">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest border border-white/5 flex items-center justify-center text-on-surface font-bold text-lg">O</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">Official Store</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">storefront</span> Direct</p>
+</div>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-headline-lg text-headline-lg text-on-surface leading-none">$499.00</p>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-body-md text-body-md text-on-surface">Aura Direct</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">OEM Verified</p>
+</div>
+<div class="col-span-3 flex flex-wrap gap-2 items-center">
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> 3-Day</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">security</span> 2yr Mfg</span>
+</div>
+<div class="col-span-2 flex justify-end items-center gap-3">
+<div class="text-right">
+<p class="font-title-md text-title-md text-on-surface font-bold">88/100</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Solid</p>
+</div>
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-surface-container-highest)" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-on-surface-variant)" stroke-dasharray="88, 100" stroke-width="3"></circle>
+</svg>
+</div>
+</div>
+</div>
+<!-- ROW 3: Croma -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-gutter p-4 rounded-2xl bg-surface-container-low border border-white/5 hover:bg-surface-container transition-colors items-center">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest border border-white/5 flex items-center justify-center text-on-surface font-bold text-lg">C</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">Croma</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">store</span> Retail Partner</p>
+</div>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-headline-lg text-headline-lg text-on-surface leading-none">$450.00</p>
+<p class="font-label-sm text-label-sm text-secondary mt-1">w/ Store Card</p>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-body-md text-body-md text-on-surface">Croma Retail</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">4.5 <span class="material-symbols-outlined text-[12px] text-tertiary">star</span></p>
+</div>
+<div class="col-span-3 flex flex-wrap gap-2 items-center">
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> 5-Day</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">sync</span> 14d Ret</span>
+</div>
+<div class="col-span-2 flex justify-end items-center gap-3">
+<div class="text-right">
+<p class="font-title-md text-title-md text-on-surface font-bold">75/100</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Average</p>
+</div>
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-surface-container-highest)" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-outline)" stroke-dasharray="75, 100" stroke-width="3"></circle>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: REFURBISHED / USED -->
+<section class="flex flex-col gap-2 mt-stack-md opacity-90">
+<div class="flex items-center gap-3 mb-2">
+<h3 class="font-title-md text-title-md text-on-surface-variant font-semibold tracking-wide">REFURBISHED &amp; USED</h3>
+<div class="h-[1px] flex-1 bg-gradient-to-r from-white/5 to-transparent"></div>
+</div>
+<!-- ROW 4: Flipkart (Refurbished) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-gutter p-4 rounded-2xl bg-surface-container-low/50 border border-white/5 hover:bg-surface-container transition-colors items-center">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest border border-white/5 flex items-center justify-center text-on-surface-variant font-bold text-lg">F</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface-variant">Flipkart</p>
+<span class="px-2 py-[2px] bg-tertiary/10 text-tertiary rounded text-[10px] font-bold uppercase tracking-wider border border-tertiary/20">Refurb - Excellent</span>
+</div>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-headline-lg text-headline-lg text-on-surface leading-none">$299.00</p>
+</div>
+<div class="col-span-2 flex flex-col justify-center">
+<p class="font-body-md text-body-md text-on-surface-variant">TechRenewed</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">4.1 <span class="material-symbols-outlined text-[12px] text-tertiary">star</span></p>
+</div>
+<div class="col-span-3 flex flex-wrap gap-2 items-center">
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">security</span> 90d Wty</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded-md border border-white/5 font-label-sm text-label-sm text-error flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">block</span> No Returns</span>
+</div>
+<div class="col-span-2 flex justify-end items-center gap-3">
+<div class="text-right">
+<p class="font-title-md text-title-md text-on-surface-variant font-bold">62/100</p>
+</div>
+<div class="relative w-12 h-12 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-surface-container-highest)" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="var(--tw-colors-outline-variant)" stroke-dasharray="62, 100" stroke-width="3"></circle>
+</svg>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

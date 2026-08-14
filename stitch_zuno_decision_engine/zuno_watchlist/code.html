@@ -1,0 +1,368 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ZUNO - Watchlist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#004c6e",
+                      "on-secondary": "#00344d",
+                      "surface-tint": "#c0c1ff",
+                      "primary": "#c0c1ff",
+                      "surface-container-highest": "#343537",
+                      "secondary-container": "#00a2e6",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "surface-bright": "#38393b",
+                      "surface-container-lowest": "#0d0e10",
+                      "on-error-container": "#ffdad6",
+                      "surface": "#121315",
+                      "background": "#121315",
+                      "secondary-fixed-dim": "#89ceff",
+                      "tertiary-container": "#d97721",
+                      "primary-fixed": "#e1e0ff",
+                      "error-container": "#93000a",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container": "#1f2022",
+                      "surface-container-high": "#292a2c",
+                      "outline": "#908fa0",
+                      "on-surface-variant": "#c7c4d7",
+                      "secondary-fixed": "#c9e6ff",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "tertiary": "#ffb783",
+                      "on-secondary-container": "#00344e",
+                      "on-tertiary": "#4f2500",
+                      "on-tertiary-container": "#452000",
+                      "on-surface": "#e3e2e5",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "on-secondary-fixed": "#001e2f",
+                      "on-primary": "#1000a9",
+                      "on-tertiary-fixed": "#301400",
+                      "on-primary-fixed": "#07006c",
+                      "on-primary-container": "#0d0096",
+                      "outline-variant": "#464554",
+                      "on-background": "#e3e2e5",
+                      "inverse-on-surface": "#303033",
+                      "surface-variant": "#343537",
+                      "inverse-primary": "#494bd6",
+                      "surface-container-low": "#1b1c1e",
+                      "error": "#ffb4ab",
+                      "surface-dim": "#121315",
+                      "tertiary-fixed": "#ffdcc5",
+                      "inverse-surface": "#e3e2e5",
+                      "secondary": "#89ceff",
+                      "on-error": "#690005",
+                      "primary-container": "#8083ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "container-padding": "32px",
+                      "stack-lg": "40px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #08090B;
+        }
+        .glass-card {
+            background: linear-gradient(180deg, rgba(27, 28, 30, 0.4) 0%, rgba(18, 19, 21, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+        }
+        .zuno-score-arc {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 42; /* 85% */
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md antialiased min-h-screen flex flex-col md:flex-row">
+<!-- TopNavBar (Mobile) / SideNavBar (Desktop) -->
+<div class="md:hidden fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-20 bg-surface/80 backdrop-blur-xl shadow-xl shadow-primary/5 bg-surface-dim/50 border-b border-white/10">
+<div class="font-display-lg text-display-lg font-bold tracking-tighter text-primary">ZUNO</div>
+<div class="flex gap-4 items-center text-on-surface-variant font-medium">
+<a class="hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Discover</a>
+<a class="hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Compare</a>
+<a class="hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Insights</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Watchlist</a>
+<span class="material-symbols-outlined ml-4 cursor-pointer" data-icon="smart_toy">smart_toy</span>
+<img alt="Executive User Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A small, circular avatar image of an executive user in a high-tech corporate setting, lit with subtle neon blue accents. Close up, professional, sleek, dark atmospheric lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKv5-cw2XAmu0lk_HMVmYaVGmcxaxMWPgzrlOOZiVjrXglotAhowofUXXxrHBmt9efobptvdFOU5bZg5fixCJKl5Dzy5Tx_NzsVcRn68fnx6DbS5K0NcFM8QuJV6_RL9tbBtexG82I4yRNg9rOb52lrm9REKRic0a2EAdn2ShUThNK9e7GsNJBnAad8RJJpYv0wGvkE7EctlZORhcQZzCCmUS-v6D8MrOPKEr3mO8ot8Hw6bDpD-wcig">
+</div>
+</div>
+<div class="hidden md:flex fixed left-0 top-0 h-full z-40 flex-col p-stack-md bg-surface-container-low/95 backdrop-blur-2xl bg-surface-container-low border-r border-white/5 shadow-2xl shadow-black/50 docked left-0 h-screen w-80 translate-x-1 transition-transform">
+<div class="mb-stack-lg">
+<div class="font-headline-lg text-headline-lg font-black text-primary">ZUNO AI</div>
+<div class="text-on-surface-variant font-label-sm mt-1 uppercase tracking-wider">Decision Intelligence</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-title-md text-title-md">Discover</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="compare_arrows">compare_arrows</span>
+<span class="font-title-md text-title-md">Compare</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-title-md text-title-md">Insights</span>
+</a>
+<a class="flex items-center gap-3 text-primary font-bold bg-primary/10 rounded-xl px-4 py-3 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+<span class="font-title-md text-title-md">Watchlist</span>
+</a>
+</nav>
+<button class="w-full mt-auto mb-4 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary font-title-md flex items-center justify-center gap-2 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+            Ask AI Assistant
+        </button>
+<div class="flex flex-col gap-2 pt-4 border-t border-white/5">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</div>
+<!-- Main Canvas -->
+<main class="flex-1 w-full md:ml-80 pt-24 md:pt-0 p-container-padding overflow-y-auto">
+<!-- Header -->
+<header class="flex justify-between items-end mb-stack-lg">
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-on-surface mb-2 tracking-tight">Active Watchlist</h1>
+<p class="text-on-surface-variant font-title-md text-title-md">Tracking 12 key assets across 4 platforms.</p>
+</div>
+<div class="flex gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-[#050506] border border-white/10 rounded-full pl-10 pr-4 py-2 text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 w-64 transition-all" placeholder="Filter watchlist..." type="text">
+</div>
+<button class="bg-surface-container-high border border-white/10 text-on-surface px-4 py-2 rounded-full hover:bg-surface-bright transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                    Sort
+                </button>
+</div>
+</header>
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="glass-card rounded-2xl p-6 flex flex-col group hover:border-primary/30 transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-[#050506] relative">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="A sleek, high-end commercial drone hovering in a minimalist dark studio setting. Illuminated by a single sharp spotlight from above, emphasizing its metallic chassis and carbon fiber rotors. Deep cinematic shadows and a cool indigo tint in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRON31dtzo0MYZLtc2yjXennRGypxxvdalyr4okaJYPvufqenoOmV5jNnuGFJSPtMT28JB2yGJiKyLkEgWmFsLgGdsQhhpC8nYPHor2jG0O137jT_9DC12CE_711my7GDGmUJ9ZCS8au3QF8kGUx-rojIQEmEtIaBq0nacf2Kx3-1LiK8rVG5uEWN0OoinMf4IxDIex1_s1kSG4sw9FPfS-zfbEeKvo8dPm5V8rCRD285gb9fbZa3Kqg">
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider mb-1">ZUNO SCORE</span>
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.1)" stroke-width="6"></circle>
+<circle class="zuno-score-arc" cx="50" cy="50" fill="none" r="45" stroke="#c0c1ff" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<span class="absolute font-title-md text-title-md font-bold text-primary">85</span>
+</div>
+</div>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-title-md font-bold text-on-surface mb-1">AeroTech Pro Drone</h3>
+<p class="text-on-surface-variant text-sm mb-4">Global Supply Co.</p>
+<div class="bg-[#050506] rounded-xl p-4 border border-white/5 mb-6">
+<div class="flex justify-between items-end mb-2">
+<span class="text-on-surface-variant font-label-sm">Best Current Price</span>
+<span class="text-secondary font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                            -5.2% (24h)
+                        </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">$1,249.00</span>
+<span class="text-on-surface-variant text-sm">/ unit</span>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="bg-primary-container text-on-primary-container py-2 rounded-lg font-medium hover:bg-primary transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                        Compare
+                    </button>
+<button class="bg-surface-container-high border border-white/10 text-on-surface py-2 rounded-lg font-medium hover:bg-surface-bright transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">notifications</span>
+                        Alert
+                    </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-2xl p-6 flex flex-col group hover:border-primary/30 transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-[#050506] relative">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="A premium enterprise server rack component, showcasing intricate circuitry and glowing fiber optic cables. Close up shot in a sterile, dark server room environment with volumetric blue lighting and highly reflective metallic surfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIcy7UYG9mme5vwi8lB448wCL_GCB2UKgvcZT3o7WTyIRiU8l_9hxZcbuXO6b2tCynJXQb-p_677e3N4OyydtCT3BO8pN9VGnY8gegcte0sc6QU200vG2OedZ6FE-hpFyDvQ5gM5e-tUOqGM8MD4XlKVIB8I8P0tLzeN9LQh4wftk5iOeNDfjmI2KRhc5gc8zteZ_GzRx81Hz_qugZWrl1sojCNjfVxjG2Iya3CauGN4Ejjfwwdr93OA">
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider mb-1">ZUNO SCORE</span>
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.1)" stroke-width="6"></circle>
+<circle cx="50" cy="50" fill="none" r="45" stroke="#c0c1ff" stroke-linecap="round" stroke-width="6" style="stroke-dasharray: 283; stroke-dashoffset: 22;"></circle>
+</svg>
+<span class="absolute font-title-md text-title-md font-bold text-primary">92</span>
+</div>
+</div>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-title-md font-bold text-on-surface mb-1">Nexus Core Server TX</h3>
+<p class="text-on-surface-variant text-sm mb-4">TechLogix Solutions</p>
+<div class="bg-[#050506] rounded-xl p-4 border border-white/5 mb-6">
+<div class="flex justify-between items-end mb-2">
+<span class="text-on-surface-variant font-label-sm">Best Current Price</span>
+<span class="text-error font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                            +1.4% (24h)
+                        </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">$8,950.00</span>
+<span class="text-on-surface-variant text-sm">/ unit</span>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="bg-primary-container text-on-primary-container py-2 rounded-lg font-medium hover:bg-primary transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                        Compare
+                    </button>
+<button class="bg-surface-container-high border border-white/10 text-on-surface py-2 rounded-lg font-medium hover:bg-surface-bright transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">notifications</span>
+                        Alert
+                    </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-2xl p-6 flex flex-col group hover:border-primary/30 transition-all duration-500">
+<div class="flex justify-between items-start mb-4">
+<div class="w-16 h-16 rounded-xl overflow-hidden border border-white/10 bg-[#050506] relative">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="An abstract, stylized representation of an enterprise software dashboard on a floating glass screen. The scene is dark, lit only by the glowing graphs and data points on the screen. Cinematic depth of field with a focus on a central pulsing node." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxo846hcxQ5rOM942lrvV3kRxEwvgwPXkKNtTkQKc1rj1tS9w_NMCxRlphCLZWw0Eu8DKwLdnjDzjO01amQ6doaNC1ewvBAYJlS09ZaTwk3imwh2sIMe__wXki5vx-awafqwESFRuxZ2LK8qfQ9bmDUFTCbOvpizRkRtNirHL-4ETihohwJnQa1IsNt6GQ0dMv7p1PnaCpByFztkeIByrxjtUU-IDerjoxIKnGzq35XPfYt95rCBC56w">
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider mb-1">ZUNO SCORE</span>
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.1)" stroke-width="6"></circle>
+<circle cx="50" cy="50" fill="none" r="45" stroke="#c0c1ff" stroke-linecap="round" stroke-width="6" style="stroke-dasharray: 283; stroke-dashoffset: 70;"></circle>
+</svg>
+<span class="absolute font-title-md text-title-md font-bold text-primary">75</span>
+</div>
+</div>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-title-md font-bold text-on-surface mb-1">Optima Logistics Suite</h3>
+<p class="text-on-surface-variant text-sm mb-4">Cloud ERP Systems</p>
+<div class="bg-[#050506] rounded-xl p-4 border border-white/5 mb-6 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-end mb-2 relative z-10">
+<span class="text-on-surface-variant font-label-sm">Best Current Price</span>
+<span class="text-on-surface-variant font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">horizontal_rule</span>
+                            0.0% (24h)
+                        </span>
+</div>
+<div class="flex items-baseline gap-2 relative z-10">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">$24,000</span>
+<span class="text-on-surface-variant text-sm">/ year</span>
+</div>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="bg-primary-container text-on-primary-container py-2 rounded-lg font-medium hover:bg-primary transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">compare_arrows</span>
+                        Compare
+                    </button>
+<button class="bg-surface-container-high border border-white/10 text-on-surface py-2 rounded-lg font-medium hover:bg-surface-bright transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-sm">notifications_active</span>
+                        Edit Alert
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

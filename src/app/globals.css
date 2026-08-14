@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #c0c1ff;
+  --color-secondary: #89ceff;
+  --color-tertiary: #ffb783;
+  
+  --color-background: #08090B;
+  --color-surface: #121315;
+  
+  --color-surface-container: #1f2022;
+  --color-surface-container-high: #292a2c;
+  --color-surface-container-low: #1b1c1e;
+  --color-surface-container-lowest: #0d0e10;
+  --color-surface-bright: #38393b;
+  
+  --color-outline: #908fa0;
+  --color-outline-variant: #464554;
+  
+  --color-on-surface: #e3e2e5;
+  --color-on-surface-variant: #c7c4d7;
+  
+  --spacing-container-padding: 32px;
+  --spacing-stack-sm: 8px;
+  --spacing-stack-md: 16px;
+  --spacing-stack-lg: 40px;
+  --spacing-gutter: 24px;
+}
+
+body {
+  background-color: #08090B;
+  color: #e3e2e5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glass Card */
+.glass-card {
+  background: linear-gradient(180deg, rgba(27, 28, 30, 0.4) 0%, rgba(18, 19, 21, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Circular Arc score rings */
+.zuno-score-arc {
+  stroke-dasharray: 283;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2022;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #292a2c;
+}
+
+/* Stitch Custom Helpers */
+.glass-panel {
+  background: rgba(18, 19, 21, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-input {
+  background: #050506;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 24px rgba(192, 193, 255, 0.15);
+  border-color: rgba(192, 193, 255, 0.3);
+}
+
+.animated-gradient-text {
+  background: linear-gradient(90deg, #c0c1ff, #89ceff, #c0c1ff);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.marquee-content {
+  display: inline-flex;
+  gap: 4rem;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Sliders */
+.slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c0c1ff;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(192, 193, 255, 0.5);
+}
+.slider-thumb::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c0c1ff;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(192, 193, 255, 0.5);
+}
+

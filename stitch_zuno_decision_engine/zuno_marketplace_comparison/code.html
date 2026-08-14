@@ -1,0 +1,455 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ZUNO - Comparison</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&amp;family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "on-secondary": "#00344d",
+                    "surface-tint": "#c0c1ff",
+                    "primary": "#c0c1ff",
+                    "surface-container-highest": "#343537",
+                    "secondary-container": "#00a2e6",
+                    "on-tertiary-fixed-variant": "#703700",
+                    "surface-bright": "#38393b",
+                    "surface-container-lowest": "#0d0e10",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#121315",
+                    "background": "#121315",
+                    "secondary-fixed-dim": "#89ceff",
+                    "tertiary-container": "#d97721",
+                    "primary-fixed": "#e1e0ff",
+                    "error-container": "#93000a",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "surface-container": "#1f2022",
+                    "surface-container-high": "#292a2c",
+                    "outline": "#908fa0",
+                    "on-surface-variant": "#c7c4d7",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "tertiary": "#ffb783",
+                    "on-secondary-container": "#00344e",
+                    "on-tertiary": "#4f2500",
+                    "on-tertiary-container": "#452000",
+                    "on-surface": "#e3e2e5",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "on-secondary-fixed": "#001e2f",
+                    "on-primary": "#1000a9",
+                    "on-tertiary-fixed": "#301400",
+                    "on-primary-fixed": "#07006c",
+                    "on-primary-container": "#0d0096",
+                    "outline-variant": "#464554",
+                    "on-background": "#e3e2e5",
+                    "inverse-on-surface": "#303033",
+                    "surface-variant": "#343537",
+                    "inverse-primary": "#494bd6",
+                    "surface-container-low": "#1b1c1e",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#121315",
+                    "tertiary-fixed": "#ffdcc5",
+                    "inverse-surface": "#e3e2e5",
+                    "secondary": "#89ceff",
+                    "on-error": "#690005",
+                    "primary-container": "#8083ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "2xl": "1.5rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "container-padding": "32px",
+                    "stack-lg": "40px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Geist"],
+                    "headline-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal scrolling area */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Subtle entrance animation */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        /* Gauge animation */
+        .gauge-circle {
+            transition: stroke-dashoffset 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopNavBar (JSON Anchor) -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-20 bg-surface/80 backdrop-blur-xl bg-surface-dim/50 border-b border-white/10 shadow-xl shadow-primary/5">
+<!-- Brand -->
+<div class="flex items-center gap-gutter">
+<span class="font-display-lg text-display-lg font-bold tracking-tighter text-primary">ZUNO</span>
+</div>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant font-medium font-label-sm text-label-sm hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Discover</a>
+<!-- Active State -->
+<a aria-current="page" class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm scale-95 active:scale-90 transition-transform" href="#">Compare</a>
+<a class="text-on-surface-variant font-medium font-label-sm text-label-sm hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Insights</a>
+<a class="text-on-surface-variant font-medium font-label-sm text-label-sm hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform" href="#">Watchlist</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-stack-md">
+<button class="p-2 rounded-full hover:bg-surface-container-highest transition-colors text-on-surface">
+<span class="material-symbols-outlined">smart_toy</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden">
+<img alt="Executive User Profile" class="w-full h-full object-cover" data-alt="A macro photography style portrait of a futuristic AI interface avatar, depicted as a polished dark graphite sphere with glowing deep indigo and cyan internal energy circuits. The background is a seamless deep black gradient, evoking a sophisticated, high-end cinematic technology aesthetic suitable for C-suite executive software profiles." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAx7LJJpvwWsf6mdtNLxxNYcFIe6lNeUaFHCDInUnwjVGj3ffI94qDGYbK6QbcpGswVeF6g8ojsV7E7fmMORHsA5CZAOwJO7IE0GoQHH8HVpRpcbhj45nqJk0DQS6pwCIQixPL7OwFkowgFMhc4-COl3k0VrzCSpqH0VaC_F0xXgniy85p5FkpbMwBwqOX1lgGOX9AejF6aH3Y4yjEnJqfyNq6TbqD9tp_sd_w7xeAQrX8OLQ8TvGsYw">
+</div>
+</div>
+</nav>
+<!-- SideNavBar (JSON Anchor) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full z-40 flex-col p-stack-md bg-surface-container-low/95 backdrop-blur-2xl bg-surface-container-low border-r border-white/5 shadow-2xl shadow-black/50 w-80 pt-24">
+<!-- Header -->
+<div class="flex items-center gap-stack-sm px-4 mb-stack-lg">
+<div class="w-12 h-12 rounded-xl bg-surface-container overflow-hidden shrink-0 shadow-inner">
+<img alt="ZUNO AI Interface" class="w-full h-full object-cover" data-alt="Abstract 3D rendering of an intelligent core unit. An iridescent, dark glass cube floating effortlessly, encapsulating a pulsating core of cool cyan and primary indigo light. The lighting emphasizes hard, precision reflections against deep organic shadows, creating a high-stakes, technologically advanced decision intelligence visual token." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLbrS_9TW8jPZ3EkQMIiheHJuzHB4sng-9E6LJCTYKrqrrjB2toJxgTQwP3_n8WcXCQAvmyfpu_cd3LEcftiX4pzX5GFOLkFkHZOd0OjN7vdNJQAS3FjZyCPel2Qxv7StoVA6LcO7G1LDTcU7qIqVECyaUWkLCrumcZ3GUhOM_W1gQUBxUKQ6S_NUt70mmclLYjCeiHrfTu_jLBcF7mv-dfnd472bCzzRxbJ454_B7JON8Rl72l-4AgQ">
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface font-semibold tracking-tight">ZUNO AI</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest opacity-70">Decision Intelligence</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex-1 flex flex-col gap-unit">
+<a class="flex items-center gap-stack-sm text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1 hover:translate-x-0 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-80">explore</span>
+<span>Discover</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-stack-sm text-primary font-bold bg-primary/10 rounded-xl px-4 py-3 translate-x-1 transition-transform font-body-md text-body-md shadow-[inset_1px_0_0_0_rgba(192,193,255,0.3)]" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">compare_arrows</span>
+<span>Compare</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1 hover:translate-x-0 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-80">insights</span>
+<span>Insights</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl translate-x-1 hover:translate-x-0 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-80">visibility</span>
+<span>Watchlist</span>
+</a>
+<!-- AI CTA -->
+<div class="mt-stack-lg p-4 bg-gradient-to-br from-surface-container-high to-surface-container rounded-2xl border border-white/5 relative overflow-hidden group cursor-pointer">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold tracking-wider uppercase">Ask AI Assistant</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Analyze these models in depth.</p>
+</div>
+</nav>
+<!-- Footer Navigation -->
+<div class="flex flex-col gap-unit mt-auto border-t border-white/5 pt-stack-sm">
+<a class="flex items-center gap-stack-sm text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-80">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all rounded-xl font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px] opacity-80">help</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="pt-24 md:pl-80 min-h-screen flex flex-col relative z-0">
+<!-- Header Controls -->
+<div class="px-container-padding py-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-lg border-b border-surface-container border-opacity-50 animate-fade-in" style="animation-delay: 0.1s;">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                    Comparison Engine
+                </p>
+<h1 class="font-headline-lg text-headline-lg md:hidden text-on-surface mb-stack-sm">8 matching listings</h1>
+<h1 class="hidden md:block font-headline-lg text-headline-lg text-on-surface font-light tracking-tight"><strong class="font-bold">8</strong> matching listings</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-2xl">High-fidelity analysis prioritizing long-term value, seller reputation, and warranty comprehensiveness.</p>
+</div>
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-stack-md">
+<!-- Filters -->
+<div class="flex bg-surface-container-low p-1 rounded-full border border-white/5">
+<button class="px-6 py-2 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-medium shadow-sm transition-colors">New</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-colors">Refurbished</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium transition-colors">Used</button>
+</div>
+<!-- Sorter -->
+<div class="relative group">
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low transition-colors">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Sort:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Best for Me</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Horizontal Scroll Area - Comparison Cards -->
+<div class="flex-1 relative w-full overflow-hidden">
+<!-- Background ambient glow -->
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex overflow-x-auto gap-gutter px-container-padding py-stack-lg pb-24 snap-x snap-mandatory hide-scrollbar animate-fade-in" style="animation-delay: 0.2s;">
+<!-- CARD 1: BEST FOR YOU (Winner) -->
+<div class="relative w-[360px] shrink-0 bg-[#050506] rounded-2xl p-6 border border-secondary-container/50 shadow-[0_0_30px_-5px_rgba(0,162,230,0.15)] flex flex-col snap-center before:absolute before:inset-0 before:rounded-2xl before:border before:border-secondary-container/20 before:pointer-events-none group hover:-translate-y-2 transition-transform duration-500">
+<!-- Winner Badge -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,162,230,0.5)] flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                        Best For You
+                    </div>
+<!-- Header: Score & Brand -->
+<div class="flex justify-between items-start mb-stack-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-white/10 p-1">
+<img alt="Retailer Logo" class="w-full h-full object-contain" data-alt="A minimalist logo for a premium tech electronics retailer. A sleek, abstract geometric shape resembling an 'E' formed by glowing thin neon white and indigo lines against a pitch-black background. High contrast, sharp edges, sophisticated corporate identity design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3CmFKF2lLLig3Daz-KstzjmrZrL-coHu8MtVmuVsoaiaHgo3gIZd4DadEiSkGvtrAnFMoROdxbBuVbTADlstHs5DIFCozfdyw8QnJ3-Nmo7E8WE6D-BnQ3_n_yesm5ud_y5VAp-torCNwFsCKyH2ajsMtJRYDRiblvAFLbHhfen-huhOn0XAVgY78upkFxMI_ZBqq6txBKY2ZQ6fq7V00zWi4GuR4e6mcACnQ6bLTjGEPs_HF6JSeYw">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">TechNova Pro</h3>
+<p class="font-label-sm text-label-sm text-primary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                    Authorized Seller
+                                </p>
+</div>
+</div>
+<!-- Score Arc -->
+<div class="relative w-14 h-14 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-secondary-container gauge-circle drop-shadow-[0_0_4px_rgba(0,162,230,0.8)]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-dashoffset="5.2" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<span class="font-title-md text-title-md font-bold text-on-surface relative z-10">94<span class="text-[12px] text-on-surface-variant font-normal">.8</span></span>
+</div>
+</div>
+<!-- Price Section -->
+<div class="py-stack-sm mb-stack-md border-b border-white/5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Effective Price</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-bold">₹47,999</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant line-through mt-1">MSRP ₹52,999</p>
+</div>
+<!-- Key Metrics -->
+<div class="flex flex-col gap-3 mb-stack-lg flex-1">
+<div class="flex justify-between items-center group/metric">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">star</span>
+                                Rating
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-1">
+                                4.9 <span class="text-on-surface-variant text-[12px] font-normal">(2.4k)</span>
+</span>
+</div>
+<div class="flex justify-between items-center group/metric">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">verified_user</span>
+                                Warranty
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium">2 Yrs + Accidental</span>
+</div>
+<div class="flex justify-between items-center group/metric">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">published_with_changes</span>
+                                Returns
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium">30 Days (Free)</span>
+</div>
+</div>
+<!-- Why this won (AI Insight) -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-primary/20 blur-xl rounded-full"></div>
+<p class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold flex items-center gap-1.5 mb-3">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+                            Why this won
+                        </p>
+<ul class="flex flex-col gap-2 font-label-sm text-label-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary-container mt-0.5">check_circle</span>
+<span>Price is <strong class="text-secondary-container">12% below</strong> average for this condition.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary-container mt-0.5">check_circle</span>
+<span>Top 1% seller rating in electronics category.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary-container mt-0.5">check_circle</span>
+<span>Includes premium next-day free delivery.</span>
+</li>
+</ul>
+</div>
+<button class="w-full mt-stack-md py-3 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider font-bold rounded-lg hover:bg-secondary transition-colors">Select Offer</button>
+</div>
+<!-- CARD 2: Competitor -->
+<div class="w-[360px] shrink-0 bg-surface-container-low rounded-2xl p-6 border border-white/5 flex flex-col snap-center hover:bg-surface-container hover:border-white/10 transition-all duration-300">
+<!-- Header: Score & Brand -->
+<div class="flex justify-between items-start mb-stack-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 p-1">
+<img alt="Marketplace Logo" class="w-full h-full object-contain" data-alt="A stylized vector logo for an online marketplace. The design features a bold, sharp-edged hexagon enclosing a subtle lightning bolt motif. Rendered in monochromatic silver and deep charcoal on a pitch-black canvas, expressing efficiency, speed, and modern digital commerce." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn9xWySsQ0Isweg3rmMGlXiYB6fGjbsssAnvs-jQzsFPUpy_EibqZ9kyqK8LhDQo-kJTkldG93ucL8nSYN_4dJOVLsXcf-szO7af0dLOzXAiaBuPjk1hSlf_moMQ6uvzjFM_GoRa_bClLEuWDCfpqhX9Ho5qStmHfp18RSAPuH32JE6PRB2c2zeqkHNrEmHubK5FRJF9tm4fayA5M3JLMn74rCpWzrUdE2kOfwQMnxF9F2rcF50Wf9fw">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Global Gadgets</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">
+                                    Standard Seller
+                                </p>
+</div>
+</div>
+<!-- Score Arc -->
+<div class="relative w-14 h-14 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary-container gauge-circle" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-dashoffset="18" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<span class="font-title-md text-title-md font-bold text-on-surface relative z-10">82<span class="text-[12px] text-on-surface-variant font-normal">.0</span></span>
+</div>
+</div>
+<!-- Price Section -->
+<div class="py-stack-sm mb-stack-md border-b border-white/5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Effective Price</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-medium">₹46,500</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant line-through mt-1">MSRP ₹52,999</p>
+</div>
+<!-- Key Metrics -->
+<div class="flex flex-col gap-3 mb-stack-lg flex-1">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">star</span>
+                                Rating
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-1">
+                                4.2 <span class="text-on-surface-variant text-[12px] font-normal">(890)</span>
+</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">verified_user</span>
+                                Warranty
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium">1 Year Limited</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">published_with_changes</span>
+                                Returns
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium">14 Days (Fee applies)</span>
+</div>
+</div>
+<button class="w-full mt-auto py-3 bg-surface border border-outline-variant text-on-surface font-label-sm text-label-sm uppercase tracking-wider font-semibold rounded-lg hover:bg-surface-container-high transition-colors">View Details</button>
+</div>
+<!-- CARD 3: Competitor -->
+<div class="w-[360px] shrink-0 bg-surface-container-low rounded-2xl p-6 border border-white/5 flex flex-col snap-center hover:bg-surface-container hover:border-white/10 transition-all duration-300 opacity-80 hover:opacity-100">
+<!-- Header: Score & Brand -->
+<div class="flex justify-between items-start mb-stack-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 p-1">
+<img alt="Store Logo" class="w-full h-full object-contain" data-alt="A clean, typographic logo for a consumer electronics store. The letters 'EC' are stylized with sharp angles and a high-gloss metallic finish. Embedded on a very dark, subtly textured background to reflect a sophisticated, premium brand identity suitable for a high-end interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdzMn_6cEG0Opb79i7rUR8gSo6vP9jhZg7esPgvirlMcfsfeX-QmMkzzJdi1V-LEIEh3nQJ9aYI21jmfZWYurPkEzyRX5e36XpOwe3LdZf60qX9gByN8TATkGihPQ2fLRs2gkgnrw46FfSJHOAKyRcwpw2eplEKzsv4RZGE_AM4GG_AJiZkmYzg86uFCu1FeUwufIVMTmD2KXKv2Qs0Av-vCz0D-n0KtII1lJNTqSwq4wcqZoSdzYrpA">
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">ElectroCity</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">
+                                    Premium Seller
+                                </p>
+</div>
+</div>
+<!-- Score Arc -->
+<div class="relative w-14 h-14 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary-container gauge-circle" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-dashoffset="24" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<span class="font-title-md text-title-md font-bold text-on-surface relative z-10">76<span class="text-[12px] text-on-surface-variant font-normal">.4</span></span>
+</div>
+</div>
+<!-- Price Section -->
+<div class="py-stack-sm mb-stack-md border-b border-white/5">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Effective Price</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-medium">₹51,000</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant line-through mt-1">MSRP ₹52,999</p>
+</div>
+<!-- Key Metrics -->
+<div class="flex flex-col gap-3 mb-stack-lg flex-1">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">star</span>
+                                Rating
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-1">
+                                4.7 <span class="text-on-surface-variant text-[12px] font-normal">(5.1k)</span>
+</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">verified_user</span>
+                                Warranty
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium">2 Years Standard</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] opacity-70">published_with_changes</span>
+                                Returns
+                            </span>
+<span class="font-body-md text-body-md text-on-surface font-medium text-error">No Returns</span>
+</div>
+</div>
+<button class="w-full mt-auto py-3 bg-surface border border-outline-variant text-on-surface font-label-sm text-label-sm uppercase tracking-wider font-semibold rounded-lg hover:bg-surface-container-high transition-colors">View Details</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Edge fade for horizontal scroll indication -->
+<div class="fixed right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent pointer-events-none z-10 hidden md:block"></div>
+</body></html>

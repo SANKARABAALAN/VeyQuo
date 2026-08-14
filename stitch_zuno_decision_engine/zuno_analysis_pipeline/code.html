@@ -1,0 +1,427 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ZUNO AI - Search Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "on-secondary": "#00344d",
+                        "surface-tint": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "surface-container-highest": "#343537",
+                        "secondary-container": "#00a2e6",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#38393b",
+                        "surface-container-lowest": "#0d0e10",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#121315",
+                        "background": "#121315",
+                        "secondary-fixed-dim": "#89ceff",
+                        "tertiary-container": "#d97721",
+                        "primary-fixed": "#e1e0ff",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#1f2022",
+                        "surface-container-high": "#292a2c",
+                        "outline": "#908fa0",
+                        "on-surface-variant": "#c7c4d7",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "tertiary": "#ffb783",
+                        "on-secondary-container": "#00344e",
+                        "on-tertiary": "#4f2500",
+                        "on-tertiary-container": "#452000",
+                        "on-surface": "#e3e2e5",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-primary": "#1000a9",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-container": "#0d0096",
+                        "outline-variant": "#464554",
+                        "on-background": "#e3e2e5",
+                        "inverse-on-surface": "#303033",
+                        "surface-variant": "#343537",
+                        "inverse-primary": "#494bd6",
+                        "surface-container-low": "#1b1c1e",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#121315",
+                        "tertiary-fixed": "#ffdcc5",
+                        "inverse-surface": "#e3e2e5",
+                        "secondary": "#89ceff",
+                        "on-error": "#690005",
+                        "primary-container": "#8083ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "container-padding": "32px",
+                        "stack-lg": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #08090B; color: #e3e2e5; }
+        .glass-panel {
+            background: rgba(27, 28, 30, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(192, 193, 255, 0.3);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .glow-line {
+            position: relative;
+            background: #c0c1ff;
+        }
+        .glow-line::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #c0c1ff;
+            filter: blur(4px);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-20 bg-surface/80 backdrop-blur-xl bg-surface-dim/50 border-b border-white/10 shadow-xl shadow-primary/5 hidden md:flex">
+<div class="flex items-center gap-8">
+<div class="font-display-lg text-display-lg font-bold tracking-tighter text-primary">ZUNO</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Discover</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Compare</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase" href="#">Insights</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Watchlist</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">smart_toy</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img alt="Executive User Profile" class="w-full h-full object-cover" data-alt="A macro shot of a sleek, futuristic executive user avatar. The digital profile image is minimal, featuring subtle, glowing geometric elements on a dark, cinematic background. The lighting is precise, with cool indigo accents highlighting the edges. Sophisticated futuristic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwrJuFD0_jOX_OhXQIB0RzzZPVG1R8AmiuAbUTeJWC9FJqiSdDZ6OYHkhUSgVGdmmSG69apptEoaWg7amTzCt6Ilz7vylsOS4ptTvDTQzs7xi0ZD6q8NGwe6hDorx0Zs7C9bzQlJV6DBSS6MhLDFnH2N3yCwUeDRuzu_QHeOzSVOLEW3379_ErL5_wpGTszvNM4yPLgg_lN6sBhEvNgWy5sJBN84bTfAcuET9L0wlQizEpD3gYNPVIpg">
+</div>
+</div>
+</nav>
+<!-- SideNavBar (Desktop only, hidden for search focus per intent rules, but included for structure if needed, overriding for this cinematic view to focus on center) -->
+<!-- Navigation shell suppressed for linear/transactional AI analysis flow -->
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 px-container-padding pb-container-padding flex flex-col h-screen max-h-screen relative z-10">
+<!-- Header: User Query & Intent -->
+<header class="mb-stack-lg z-20 text-center">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm tracking-tight">"Best laptop for coding under ₹70,000"</h1>
+<div class="flex justify-center gap-3 flex-wrap">
+<div class="bg-surface-container-high px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse-slow"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Budget ₹70,000</span>
+</div>
+<div class="bg-surface-container-high px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse-slow"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Use Coding</span>
+</div>
+<div class="bg-surface-container-high px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse-slow"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Priority Battery</span>
+</div>
+<div class="bg-surface-container-high px-4 py-2 rounded-full border border-white/10 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse-slow"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Condition New</span>
+</div>
+</div>
+</header>
+<!-- Pipeline -->
+<div class="w-full max-w-4xl mx-auto mb-stack-lg z-20">
+<div class="flex justify-between items-center relative">
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container-high -z-10"></div>
+<div class="absolute top-1/2 left-0 w-3/5 h-0.5 glow-line -z-10 transition-all duration-1000"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary neon-glow"></div>
+<span class="font-label-sm text-label-sm text-primary uppercase">Discover</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary neon-glow"></div>
+<span class="font-label-sm text-label-sm text-primary uppercase">Extract</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary neon-glow"></div>
+<span class="font-label-sm text-label-sm text-primary uppercase">Match</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-primary neon-glow animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold">Normalize</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-surface-container-highest border border-white/20"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Score</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-surface-container-highest border border-white/20"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Decide</span>
+</div>
+</div>
+</div>
+<!-- 3-Column Layout -->
+<div class="flex-grow grid grid-cols-1 md:grid-cols-4 gap-gutter relative z-10 min-h-0">
+<!-- Left Panel: Marketplace Sources -->
+<div class="col-span-1 glass-panel rounded-2xl p-stack-md flex flex-col overflow-y-auto">
+<h3 class="font-title-md text-title-md text-on-surface mb-stack-md border-b border-white/10 pb-2">Marketplace Sources</h3>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-white/5">
+<span class="font-body-md text-body-md text-on-surface">Amazon</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="font-label-sm text-label-sm text-secondary-container">LIVE</span>
+</div>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-white/5">
+<span class="font-body-md text-body-md text-on-surface">Flipkart</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="font-label-sm text-label-sm text-secondary-container">LIVE</span>
+</div>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-white/5 opacity-60">
+<span class="font-body-md text-body-md text-on-surface">Croma</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-label-sm text-label-sm text-outline">DEMO</span>
+</div>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-3 rounded-xl border border-white/5">
+<span class="font-body-md text-body-md text-on-surface">Reliance Digital</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary-container">SCANNING</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Center: 3D Engine -->
+<div class="col-span-1 md:col-span-2 relative flex items-center justify-center h-full min-h-[400px]">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" -->
+<div class="absolute inset-0 w-full h-full rounded-2xl overflow-hidden" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+
+// Simplex noise for organic movement
+vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+float snoise(vec2 v){
+  const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+           -0.577350269189626, 0.024390243902439);
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx);
+  vec2 i1;
+  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+  + i.x + vec3(0.0, i1.x, 1.0 ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+    dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 a0 = x - floor(x + 0.5);
+  float g = dot(m, a0*x0.x + h*(vec3(x0.y, x12.xz)));
+  return 130.0 * g;
+}
+
+void main() {
+    vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+    vec2 mouse = (u_mouse.xy / u_resolution.xy) * 2.0 - 1.0;
+    
+    // Create central core glow
+    float dist = length(uv);
+    float glow = 0.04 / (dist + 0.1);
+    
+    // Animate particles flowing towards center
+    float angle = atan(uv.y, uv.x);
+    float radius = length(uv);
+    
+    float particles = 0.0;
+    for(float i=0.0; i<8.0; i++) {
+        float t = u_time * (0.2 + i * 0.1);
+        float n = snoise(vec2(angle * 2.0 + t, radius * 5.0 - t));
+        particles += smoothstep(0.95, 1.0, n) * (1.0 - radius);
+    }
+    
+    // Core color (Accent)
+    vec3 accentColor = vec3(0.4, 0.6, 1.0); // Sophisticated Cyan/Blue
+    vec3 bgColor = vec3(0.03, 0.035, 0.04); // #08090B
+    
+    vec3 color = mix(bgColor, accentColor, glow * 0.5);
+    color += accentColor * particles * 0.6;
+    
+    // Add subtle flow lines
+    float lines = sin(radius * 40.0 - u_time * 2.0) * 0.5 + 0.5;
+    color += accentColor * lines * 0.02 * (1.0 - radius);
+    
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="absolute bottom-4 text-center z-10 w-full">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest bg-surface/50 px-4 py-1 rounded-full backdrop-blur-md">Normalizing Data Structures</span>
+</div>
+</div>
+<!-- Right Panel: Live Intelligence -->
+<div class="col-span-1 glass-panel rounded-2xl p-stack-md flex flex-col justify-between">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface mb-stack-md border-b border-white/10 pb-2 flex items-center justify-between">
+                        Live Intelligence
+                        <span class="material-symbols-outlined text-primary text-sm animate-spin" style="font-variation-settings: 'FILL' 0;">sync</span>
+</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-primary">12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center mt-1">Discovered</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-secondary">8</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center mt-1">Valid Matches</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-tertiary">3</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center mt-1">Variants separated</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl border border-white/5 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-error">1</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-center mt-1">Duplicate removed</span>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg">
+<div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full glow-line"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Processing Pipeline</span>
+<span class="text-primary">75%</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

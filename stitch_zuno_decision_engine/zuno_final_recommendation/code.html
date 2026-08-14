@@ -1,0 +1,292 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Product Decision - ZUNO AI</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from Style Guidance -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "on-secondary": "#00344d",
+                    "surface-tint": "#c0c1ff",
+                    "primary": "#c0c1ff",
+                    "surface-container-highest": "#343537",
+                    "secondary-container": "#00a2e6",
+                    "on-tertiary-fixed-variant": "#703700",
+                    "surface-bright": "#38393b",
+                    "surface-container-lowest": "#0d0e10",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#121315",
+                    "background": "#121315",
+                    "secondary-fixed-dim": "#89ceff",
+                    "tertiary-container": "#d97721",
+                    "primary-fixed": "#e1e0ff",
+                    "error-container": "#93000a",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "surface-container": "#1f2022",
+                    "surface-container-high": "#292a2c",
+                    "outline": "#908fa0",
+                    "on-surface-variant": "#c7c4d7",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "tertiary": "#ffb783",
+                    "on-secondary-container": "#00344e",
+                    "on-tertiary": "#4f2500",
+                    "on-tertiary-container": "#452000",
+                    "on-surface": "#e3e2e5",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "on-secondary-fixed": "#001e2f",
+                    "on-primary": "#1000a9",
+                    "on-tertiary-fixed": "#301400",
+                    "on-primary-fixed": "#07006c",
+                    "on-primary-container": "#0d0096",
+                    "outline-variant": "#464554",
+                    "on-background": "#e3e2e5",
+                    "inverse-on-surface": "#303033",
+                    "surface-variant": "#343537",
+                    "inverse-primary": "#494bd6",
+                    "surface-container-low": "#1b1c1e",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#121315",
+                    "tertiary-fixed": "#ffdcc5",
+                    "inverse-surface": "#e3e2e5",
+                    "secondary": "#89ceff",
+                    "on-error": "#690005",
+                    "primary-container": "#8083ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "container-padding": "32px",
+                    "stack-lg": "40px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Geist"],
+                    "headline-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom animations for the polished feel */
+        @keyframes drawArc {
+            from { stroke-dashoffset: 251.2; }
+            to { stroke-dashoffset: 13.06; } /* 94.8% of 251.2 */
+        }
+        .animate-arc {
+            stroke-dasharray: 251.2;
+            animation: drawArc 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes fillBar {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        .animate-bar {
+            transform-origin: left;
+            animation: fillBar 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 80px rgba(192, 193, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen antialiased overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- Minimal Task Header (Suppressing standard nav shell per rules for transactional/decision screens) -->
+<header class="w-full px-container-padding h-20 flex items-center justify-between z-50 relative bg-background/50 backdrop-blur-md border-b border-white/5">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-label-sm text-label-sm">Return to Comparison</span>
+</button>
+<div class="font-display-lg text-[24px] leading-none font-bold tracking-tighter text-primary">ZUNO</div>
+<div class="w-24"></div> <!-- Spacer for balance -->
+</header>
+<main class="max-w-7xl mx-auto px-container-padding py-stack-lg flex flex-col gap-stack-lg relative z-10">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-stack-md">Your best option</h1>
+<p class="font-title-md text-title-md text-on-surface-variant max-w-2xl">Based on your strategic parameters, this asset provides the highest probability of outperformance across all weighted metrics.</p>
+</section>
+<!-- Main Decision Card (Glassmorphism + Glow) -->
+<div class="relative w-full rounded-[2rem] bg-surface-container-low/80 backdrop-blur-3xl border border-white/10 p-stack-lg flex flex-col lg:flex-row gap-stack-lg items-center shadow-2xl shadow-black/50 glow-effect overflow-hidden group">
+<!-- Ambient internal glow -->
+<div class="absolute -top-1/2 -right-1/4 w-full h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<!-- Left: Visual & Meta -->
+<div class="w-full lg:w-1/2 flex flex-col gap-stack-md z-10">
+<div class="relative w-full aspect-video rounded-xl overflow-hidden border border-white/5 shadow-inner bg-surface-container-lowest">
+<img class="w-full h-full object-cover opacity-90 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" data-alt="A highly detailed, cinematic product shot of a sleek, futuristic industrial server rack or high-end technical equipment in a dark, moody environment. Illuminated by subtle, cool indigo and cyan led accents. The lighting is sophisticated, emphasizing the premium brushed metal textures and advanced engineering. The scene conveys high performance and state-of-the-art technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABzOpg4-E_5dnHKVWRxdhR8PCZjS-yHJbNu8qJcMV093CDAbhstkjE8z_E0fL1cPQcv7fwysQmuy2VnENiNhu3-fCb1fiJ8H4qMkyofGtEoSdAtvMK4Y43xc3UO_SxS0OPStT_oje5GgoQ6XP_eiKvQIaqLiHeCpa5gmLG8oXEnLQMOcXwIpz8h9WG7pm7Za2mnCY3K6Gt9n_3zJ6ua8t_fJ7XwfxRUlUtq1Tpj5YQmJhr5HKVVUiqOw">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+<div class="absolute bottom-stack-md left-stack-md flex gap-2">
+<span class="bg-primary/20 text-primary border border-primary/30 px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-md">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> Optimal Match
+                        </span>
+</div>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Aegis Quantum Array v9</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Enterprise-grade predictive modeling engine with unified threat landscape integration.</p>
+</div>
+</div>
+<!-- Right: Score & Action -->
+<div class="w-full lg:w-1/2 flex flex-col items-center justify-center gap-stack-lg z-10 border-t lg:border-t-0 lg:border-l border-white/10 pt-stack-lg lg:pt-0 lg:pl-stack-lg">
+<!-- Circular Score Gauge -->
+<div class="relative flex items-center justify-center w-64 h-64">
+<svg class="w-full h-full transform -rotate-90 drop-shadow-[0_0_15px_rgba(192,193,255,0.4)]" viewBox="0 0 100 100">
+<!-- Track -->
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-width="2"></circle>
+<!-- Value Arc (94.8%) -->
+<circle class="text-primary animate-arc" cx="50" cy="50" fill="none" r="40" stroke="currentColor" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="absolute flex flex-col items-center text-center">
+<span class="font-display-lg text-[64px] leading-none font-bold text-on-surface tracking-tighter">94<span class="text-primary text-[32px]">.8</span></span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-[0.2em] mt-2">Best For You</span>
+</div>
+</div>
+<button class="w-full max-w-sm bg-primary hover:bg-primary-fixed text-on-primary font-title-md text-title-md py-4 rounded-xl flex justify-center items-center gap-2 transition-all duration-300 hover:shadow-[0_0_30px_rgba(192,193,255,0.3)] hover:-translate-y-0.5 active:scale-95">
+                    Proceed to Offer
+                    <span class="material-symbols-outlined icon-filled text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Breakdown & Reasoning Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mt-stack-md">
+<!-- Animated Score Bars -->
+<div class="col-span-1 lg:col-span-5 bg-surface-container-low rounded-2xl p-stack-md border border-white/5 flex flex-col gap-stack-md">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container">bar_chart</span>
+                    Metric Synthesis
+                </h3>
+<div class="flex flex-col gap-4 mt-2">
+<!-- Price -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Price Efficiency</span>
+<span class="text-on-surface">92%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full animate-bar" style="width: 92%; animation-delay: 0.1s;"></div>
+</div>
+</div>
+<!-- Trust -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Vendor Trust Index</span>
+<span class="text-on-surface">98%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full animate-bar" style="width: 98%; animation-delay: 0.2s;"></div>
+</div>
+</div>
+<!-- Warranty -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Warranty &amp; Support</span>
+<span class="text-on-surface">88%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full animate-bar" style="width: 88%; animation-delay: 0.3s;"></div>
+</div>
+</div>
+<!-- Delivery -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Delivery Velocity</span>
+<span class="text-on-surface">95%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full animate-bar" style="width: 95%; animation-delay: 0.4s;"></div>
+</div>
+</div>
+<!-- Specifications -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Technical Specifications</span>
+<span class="text-on-surface">99%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full animate-bar drop-shadow-[0_0_5px_rgba(192,193,255,0.5)]" style="width: 99%; animation-delay: 0.5s;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Why we recommend this (Bento Grid) -->
+<div class="col-span-1 lg:col-span-7 flex flex-col gap-stack-md">
+<h3 class="font-title-md text-title-md text-on-surface flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary icon-filled">auto_awesome</span>
+                    Why we recommend this
+                </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Point 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md hover:border-primary/50 transition-colors group flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full blur-xl pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+<span class="material-symbols-outlined text-primary text-[28px]">speed</span>
+<h4 class="font-title-md text-title-md text-on-surface text-base">Unmatched Processing</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">Exceeds your baseline requirement of 100k IOPS by 45%, ensuring zero bottleneck during peak algorithmic training cycles.</p>
+<a class="mt-auto pt-2 font-label-sm text-label-sm text-primary flex items-center gap-1 hover:underline w-max" href="#">View benchmark data <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+<!-- Point 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md hover:border-primary/50 transition-colors group flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-secondary-container/5 rounded-bl-full blur-xl pointer-events-none group-hover:bg-secondary-container/10 transition-colors"></div>
+<span class="material-symbols-outlined text-secondary-container text-[28px]">verified_user</span>
+<h4 class="font-title-md text-title-md text-on-surface text-base">Enterprise Reliability</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">Vendor maintains a 99.999% uptime SLA with this specific hardware revision across our monitored Fortune 500 network.</p>
+<a class="mt-auto pt-2 font-label-sm text-label-sm text-secondary-container flex items-center gap-1 hover:underline w-max" href="#">Read SLA terms <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+<!-- Point 3 (Full width) -->
+<div class="md:col-span-2 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md hover:border-tertiary-container/50 transition-colors group flex items-start gap-4 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent to-tertiary-container/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+<div class="bg-tertiary-container/10 p-2 rounded-lg text-tertiary-container mt-1 shrink-0">
+<span class="material-symbols-outlined text-[24px]">savings</span>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="font-title-md text-title-md text-on-surface text-base">Long-term TCO Optimization</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant leading-relaxed">While initial capital expenditure is 5% higher than the runner-up, energy efficiency ratings and included 5-year proactive maintenance reduce Total Cost of Ownership by projected $14,200 over the asset lifecycle.</p>
+<a class="mt-1 font-label-sm text-label-sm text-tertiary-container flex items-center gap-1 hover:underline w-max" href="#">Analyze TCO model <span class="material-symbols-outlined text-[14px]">arrow_right_alt</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

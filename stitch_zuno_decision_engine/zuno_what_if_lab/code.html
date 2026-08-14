@@ -1,0 +1,305 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ZUNO - What-If Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=Geist:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "on-secondary": "#00344d",
+                        "surface-tint": "#c0c1ff",
+                        "primary": "#c0c1ff",
+                        "surface-container-highest": "#343537",
+                        "secondary-container": "#00a2e6",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#38393b",
+                        "surface-container-lowest": "#0d0e10",
+                        "on-error-container": "#ffdad6",
+                        "surface": "#121315",
+                        "background": "#121315",
+                        "secondary-fixed-dim": "#89ceff",
+                        "tertiary-container": "#d97721",
+                        "primary-fixed": "#e1e0ff",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#1f2022",
+                        "surface-container-high": "#292a2c",
+                        "outline": "#908fa0",
+                        "on-surface-variant": "#c7c4d7",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "tertiary": "#ffb783",
+                        "on-secondary-container": "#00344e",
+                        "on-tertiary": "#4f2500",
+                        "on-tertiary-container": "#452000",
+                        "on-surface": "#e3e2e5",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-primary": "#1000a9",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-container": "#0d0096",
+                        "outline-variant": "#464554",
+                        "on-background": "#e3e2e5",
+                        "inverse-on-surface": "#303033",
+                        "surface-variant": "#343537",
+                        "inverse-primary": "#494bd6",
+                        "surface-container-low": "#1b1c1e",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#121315",
+                        "tertiary-fixed": "#ffdcc5",
+                        "inverse-surface": "#e3e2e5",
+                        "secondary": "#89ceff",
+                        "on-error": "#690005",
+                        "primary-container": "#8083ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "container-padding": "32px",
+                        "stack-lg": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "title-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #08090B; color: #e3e2e5; }
+        .glass-panel { background: rgba(18, 19, 21, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .glass-well { background: #050506; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .slider-thumb::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #c0c1ff; cursor: pointer; box-shadow: 0 0 10px rgba(192, 193, 255, 0.5); }
+        .slider-thumb::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #c0c1ff; cursor: pointer; box-shadow: 0 0 10px rgba(192, 193, 255, 0.5); }
+        .ranking-item { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glow-text { text-shadow: 0 0 8px rgba(192, 193, 255, 0.4); }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-20 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-xl shadow-primary/5">
+<div class="flex items-center gap-stack-lg">
+<span class="font-display-lg text-display-lg font-bold tracking-tighter text-primary">ZUNO</span>
+</div>
+<div class="hidden md:flex items-center gap-gutter">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Discover</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase" href="#">Compare</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Insights</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-label-sm text-label-sm uppercase" href="#">Watchlist</a>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="scale-95 active:scale-90 transition-transform hover:text-primary duration-300 text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">smart_toy</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-white/10">
+<img alt="Executive User Profile" class="w-full h-full object-cover" data-alt="A macro photography portrait of an executive user profile. Clean, highly professional, dramatic studio lighting with deep shadows on one side. Corporate aesthetic, sharp focus, 8k resolution. Deep cinematic blacks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB919g_yNuDN3ikdqYMyHkvFkMlpWdf-u3IS8-aF9_pnN2sIZpRb--vixVMZYamK_D_p4JYE0zk94JFMYo-SCzOaJi2AdIFF3HQ2jvD3_ilAfZn9SL4o0W-If92yXw7xBtNJSNyFSeDGS2pfddGS53EXtL_Lu0AlYiNTbhAbmKWqo8Es5kjmx1h6j5NwBraRwFwYrnEF0sS-BK3tiooVH6-hBWBSB0ve0XnO0PWks8QJuYQrmo0I0IoDQ">
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-28 pb-container-padding px-container-padding max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Header -->
+<header class="col-span-full mb-stack-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm tracking-tight">Change the decision.</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Your priorities change. Your best option can too.</p>
+</header>
+<!-- Left Panel: Priority Controls -->
+<section class="col-span-1 lg:col-span-4 flex flex-col gap-stack-lg">
+<div class="glass-panel rounded-2xl p-stack-lg flex flex-col gap-stack-lg h-full">
+<div class="flex items-center gap-stack-sm mb-stack-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">tune</span>
+<h2 class="font-title-md text-title-md text-on-surface">Priority Controls</h2>
+</div>
+<div class="flex flex-col gap-stack-md">
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Price</label>
+<span class="font-title-md text-title-md text-primary font-bold">40%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="40">
+</div>
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Seller</label>
+<span class="font-title-md text-title-md text-primary font-bold">20%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="20">
+</div>
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Warranty</label>
+<span class="font-title-md text-title-md text-primary font-bold">15%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="15">
+</div>
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Delivery</label>
+<span class="font-title-md text-title-md text-primary font-bold">10%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="10">
+</div>
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Condition</label>
+<span class="font-title-md text-title-md text-primary font-bold">10%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="10">
+</div>
+<!-- Slider Item -->
+<div class="flex flex-col gap-stack-sm">
+<div class="flex justify-between items-end">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Specifications</label>
+<span class="font-title-md text-title-md text-primary font-bold">5%</span>
+</div>
+<input class="w-full h-0.5 bg-surface-container-highest appearance-none outline-none slider-thumb" max="100" min="0" type="range" value="5">
+</div>
+</div>
+</div>
+</section>
+<!-- Right Panel: Live Ranking & AI Explanation -->
+<section class="col-span-1 lg:col-span-8 flex flex-col gap-gutter">
+<!-- Live Ranking -->
+<div class="glass-panel rounded-2xl p-stack-lg flex-grow">
+<div class="flex justify-between items-center mb-stack-lg">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">sort</span>
+                        Live Ranking
+                    </h2>
+<div class="flex items-center gap-stack-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Updating</span>
+</div>
+</div>
+<div class="flex flex-col gap-stack-md relative" id="ranking-container">
+<!-- Rank 1 -->
+<div class="ranking-item glass-well rounded-xl p-stack-md flex items-center gap-gutter relative overflow-hidden border-l-4 border-l-primary" style="transform: translateY(0);">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-50"></div>
+<div class="font-display-lg text-display-lg font-black text-primary w-12 text-center opacity-80">1</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 z-10 border border-white/5">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="A sleek, futuristic industrial machinery component resting on a minimalist dark surface. Sharp geometric lines, illuminated by a soft, cool cyan rim light against a pitch-black background. High tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOJmeREi4sU3ZZM_cOr06KkyV9Y5_oAmatvsdajYWjLTasI62yf3Sljz2QvnhWZW3AsCI3pFeg2JWUhyjvfRKvAYuEzPKqWbOVckzSACPEUtSouYSFRbMTkn56fbVSp3QaUOwVBOnPTIToK3Aj1XbYfSCGgXwfeTih5tT5EZYfQ9mm2BpD4XLXACFi1rDwgTnejMno8_4IaEFHOXDBpgUvQZO4iAEzMKrwDpk4LXDMCGr38I4wggDVOg">
+</div>
+<div class="flex-grow z-10">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold mb-unit">AlphaCorp Industrial Lathe X-900</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex gap-stack-md">
+<span>Seller: BetaTech</span>
+<span>Delivery: 2 Days</span>
+</p>
+</div>
+<div class="flex flex-col items-end z-10">
+<span class="font-headline-lg text-headline-lg text-primary font-bold glow-text">94.8</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Score</span>
+</div>
+</div>
+<!-- Rank 2 -->
+<div class="ranking-item glass-well rounded-xl p-stack-md flex items-center gap-gutter relative overflow-hidden border-l-4 border-l-surface-container-highest" style="transform: translateY(0);">
+<div class="font-headline-lg text-headline-lg font-bold text-surface-container-highest w-12 text-center">2</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 border border-white/5">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="A high-end piece of precision manufacturing equipment, mostly matte black metal with subtle indigo LED indicators. Photographed in a dark, atmospheric studio environment to emphasize its robust build." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVC9Mx-S-gfzKLtMlsH_7J-389NnqYsmkq9wdrqzd6W9pSIExiDF2ltZ13pl5fIu19w7ZxKzsFuFAeS8vnvZanKBQoIz3nb6383kJhrO1MljARPDYzH1FNZsbuIbWKyMuu78XdgPb9AdEPON9iFNp58P5zO9MOK_GI11xy2SUB6D562qUqA_YzgsXoanCUr71JC-VcKu3q_jxQhvLUHLOmQzEv3EpCSD3NzmeSYnZ07_YSIDrMnhSK6Q">
+</div>
+<div class="flex-grow">
+<h3 class="font-title-md text-title-md text-on-surface font-medium mb-unit">OmniTech Precision Mill V2</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex gap-stack-md">
+<span>Seller: GlobalMach</span>
+<span>Delivery: 5 Days</span>
+</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-title-md text-title-md text-on-surface font-semibold">91.4</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Score</span>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="ranking-item glass-well rounded-xl p-stack-md flex items-center gap-gutter relative overflow-hidden border-l-4 border-l-surface-container-highest" style="transform: translateY(0);">
+<div class="font-headline-lg text-headline-lg font-bold text-surface-container-highest w-12 text-center">3</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 border border-white/5">
+<img alt="Product Image" class="w-full h-full object-cover" data-alt="A close-up abstract view of automated robotic arm joints in a dark, sophisticated setting. Shallow depth of field, with sharp focus on the polished metallic surfaces reflecting a faint blue light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzTYhgfJRZ4bwrqUcmmQX7oGBgCqGrrGgVmZh_3bY6obCCYgKgWtTX-vqGV9LqnQ1BMqpY93e327zUOGibA5Tu4I0rgnP6gTERtBVVBSsUclxgdumOu2cuOwsJeOUz38PmrBj1YubIfpTPPO23F8KMaCGmNPjJHUEl2VjRoioC_7f8nQyuruga9fp75J0EfW2ASiSIJPDpDrAxtqFwl6PluKEkwYhARGgTPsIgqbdHQNxz_UICrneqnA">
+</div>
+<div class="flex-grow">
+<h3 class="font-title-md text-title-md text-on-surface font-medium mb-unit">Nexus Robotic Assembly Arm</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex gap-stack-md">
+<span>Seller: AutoCorp</span>
+<span>Delivery: 14 Days</span>
+</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-title-md text-title-md text-on-surface font-semibold">88.2</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Score</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Explanation -->
+<div class="glass-panel rounded-2xl p-stack-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+<div class="flex gap-stack-md relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 border border-primary/30 shadow-[0_0_15px_rgba(192,193,255,0.2)]">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-stack-sm">AI Insight</h4>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            By increasing the weight of <strong class="text-white font-medium">Price</strong> to 40%, the <span class="text-primary font-medium">AlphaCorp Lathe</span> overtakes the OmniTech Mill. Although OmniTech offers slightly better specifications, the significant price advantage of the AlphaCorp unit, combined with its strong seller rating, solidifies it as the optimal choice under your current priority model.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Simple mock interaction for sliders to demonstrate the UI intent
+        const sliders = document.querySelectorAll('input[type="range"]');
+        const rankingItems = document.querySelectorAll('.ranking-item');
+        
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                // Update the percentage text
+                const valueSpan = e.target.previousElementSibling.querySelector('span');
+                valueSpan.textContent = `${e.target.value}%`;
+                
+                // Add a subtle class toggle to trigger CSS transitions on ranking items
+                // This doesn't actually reorder them in DOM, just simulates a visual "shuffle" effect
+                rankingItems.forEach((item, index) => {
+                    item.style.transform = `translateY(${Math.sin(Date.now() + index) * 4}px)`;
+                    setTimeout(() => {
+                        item.style.transform = 'translateY(0)';
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body></html>

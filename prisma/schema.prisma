@@ -1,0 +1,234 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  name          String?
+  passwordHash  String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  preferences   UserPreference?
+  searches      Search[]
+  comparisons   Comparison[]
+  watchlist     Watchlist[]
+  alerts        Alert[]
+  conversations Conversation[]
+}
+
+model UserPreference {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  priceWeight        Float    @default(0.40)
+  sellerWeight       Float    @default(0.20)
+  warrantyWeight     Float    @default(0.15)
+  deliveryWeight     Float    @default(0.10)
+  specificationWeight Float   @default(0.10)
+  conditionWeight     Float    @default(0.05)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Search {
+  id             String          @id @default(uuid())
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  query          String
+  category       String?
+  budget         Float?
+  useCase        String?
+  priority       String?
+  condition      String?
+  createdAt      DateTime        @default(now())
+  recommendation Recommendation?
+}
+
+model Product {
+  id        String           @id @default(uuid())
+  brand     String
+  name      String
+  category  String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  variants  ProductVariant[]
+}
+
+model ProductVariant {
+  id             String          @id @default(uuid())
+  productId      String
+  product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name           String
+  specifications Specification[]
+  listings       Listing[]
+  watchlistItems Watchlist[]
+  priceSnapshots PriceSnapshot[]
+  alerts         Alert[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Specification {
+  id             String         @id @default(uuid())
+  variantId      String
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  key            String
+  originalValue  String
+  normalizedValue String
+  createdAt      DateTime       @default(now())
+}
+
+model Marketplace {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  code      String    @unique // e.g. "amazon", "flipkart"
+  logoUrl   String?
+  baseUrl   String
+  listings  Listing[]
+  createdAt DateTime  @default(now())
+}
+
+model Seller {
+  id          String    @id @default(uuid())
+  name        String
+  marketplace String    // e.g. "Amazon"
+  rating      Float?    // Out of 5
+  reviewCount Int?
+  trustStatus String    @default("UNKNOWN") // VERIFIED, UNKNOWN, INSUFFICIENT DATA
+  listings    Listing[]
+  createdAt   DateTime  @default(now())
+  
+  @@unique([name, marketplace])
+}
+
+model Listing {
+  id                 String           @id @default(uuid())
+  variantId          String
+  variant            ProductVariant   @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  marketplaceId      String
+  marketplace        Marketplace      @relation(fields: [marketplaceId], references: [id])
+  sellerId           String
+  seller             Seller           @relation(fields: [sellerId], references: [id])
+  title              String
+  url                String
+  price              Float
+  deliveryFee        Float            @default(0)
+  discount           Float            @default(0)
+  effectivePrice     Float            // price + deliveryFee - discount
+  condition          String           @default("NEW") // NEW, REFURBISHED, USED
+  warranty           String?          // e.g. "1 Year Manufacturer"
+  warrantyMonths     Int              @default(0)
+  deliveryDays       Int              @default(3)
+  returnPolicy       String?          // e.g. "7 Days Replacement"
+  sourceType         String           @default("DEMO_DATA") // LIVE_API, USER_URL, USER_PASTED_DATA, DEMO_DATA
+  dataCompleteness   Float            @default(1.0)
+  matchConfidence    Float            @default(1.0)
+  comparisonItems    ComparisonItem[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Comparison {
+  id           String           @id @default(uuid())
+  userId       String?
+  user         User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  items        ComparisonItem[]
+  recommendation Recommendation?
+  conversations Conversation[]
+}
+
+model ComparisonItem {
+  id           String     @id @default(uuid())
+  comparisonId String
+  comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  listingId    String
+  listing      Listing    @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+}
+
+model Recommendation {
+  id           String      @id @default(uuid())
+  comparisonId String?     @unique
+  comparison   Comparison? @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  searchId     String?     @unique
+  search       Search?     @relation(fields: [searchId], references: [id], onDelete: Cascade)
+  summary      String
+  bestForYouId String?
+  bestValueId  String?
+  lowestPriceId String?
+  mostTrustedId String?
+  bestWarrantyId String?
+  bestDeliveryId String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Watchlist {
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variantId      String
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  targetPrice    Float
+  createdAt      DateTime       @default(now())
+}
+
+model PriceSnapshot {
+  id        String         @id @default(uuid())
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  price     Float
+  source    String
+  recordedAt DateTime      @default(now())
+}
+
+model Alert {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variantId   String
+  variant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  targetPrice Float
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+}
+
+model Conversation {
+  id           String                @id @default(uuid())
+  userId       String?
+  user         User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comparisonId String?
+  comparison   Comparison?           @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  createdAt    DateTime              @default(now())
+  messages     ConversationMessage[]
+}
+
+model ConversationMessage {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String       // "user" or "assistant"
+  content        String
+  createdAt      DateTime     @default(now())
+}
+
+model DataSource {
+  id          String   @id @default(uuid())
+  url         String   @unique
+  inputRaw    String?
+  status      String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  logs        String?
+  createdAt   DateTime @default(now())
+}
