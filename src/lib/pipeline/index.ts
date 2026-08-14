@@ -213,15 +213,23 @@ export async function runDecisionPipeline(
       listings.push(...results);
     }
 
-    // Dynamic generation fallback if DB does not have listings for this category
-    if (listings.length === 0) {
-      console.log(`No seeded listings found for category "${intent.category}". Generating dynamic demo listings...`);
+    // Check if we have enough listings that match the specific query model/keywords
+    const queryKeywords = query.toLowerCase().split(/\s+/).filter(k => k.length > 1);
+    const matchingDbListings = listings.filter(l => {
+      const titleLower = l.title.toLowerCase();
+      return queryKeywords.every(kw => titleLower.includes(kw));
+    });
+
+    // If we don't have enough matching listings (fewer than 3) for this specific query,
+    // trigger the dynamic live crawler to fetch active listings.
+    if (matchingDbListings.length < 3) {
+      console.log(`Fewer than 3 matching listings found in DB for query "${query}". Triggering live crawl...`);
       try {
         const generatedListings = await generateDynamicDemoListings(intent.category, query, intent.specificationsToCompare);
         if (generatedListings && generatedListings.length > 0) {
           await saveDynamicListingsToDb(intent.category, generatedListings);
           
-          // Query again after saving
+          // Re-query database connectors
           listings = [];
           for (const connector of CONNECTORS) {
             const results = await connector.search(intent.category);
@@ -229,13 +237,32 @@ export async function runDecisionPipeline(
           }
         }
       } catch (err) {
-        console.warn("Dynamic demo listings generation failed, falling back to local mock generator:", err);
+        console.warn("Dynamic listings generation failed, falling back to local mock generator:", err);
       }
 
-      // Final local generator fallback if DB is empty and API is exhausted (e.g., 429 errors)
-      if (listings.length === 0) {
-        console.log(`Generating mock listings locally for category "${intent.category}"`);
-        listings = generateMockListingsLocally(intent.category, query, intent.specificationsToCompare);
+      // Check matching listings count again after database update
+      const updatedMatching = listings.filter(l => {
+        const titleLower = l.title.toLowerCase();
+        return queryKeywords.every(kw => titleLower.includes(kw));
+      });
+
+      // Final local generator fallback if DB still doesn't have matching listings
+      if (updatedMatching.length < 3) {
+        console.log(`Generating mock listings locally for query "${query}"`);
+        const localListings = generateMockListingsLocally(intent.category, query, intent.specificationsToCompare);
+        listings = [...listings, ...localListings];
+      }
+    }
+
+    // Filter the final listings array to only return items matching the search query keywords
+    if (queryKeywords.length > 0) {
+      const filtered = listings.filter(l => {
+        const titleLower = l.title.toLowerCase();
+        return queryKeywords.every(kw => titleLower.includes(kw));
+      });
+      // Fallback to all listings if strict matching removes everything
+      if (filtered.length > 0) {
+        listings = filtered;
       }
     }
   }
