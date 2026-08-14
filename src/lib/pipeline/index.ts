@@ -511,46 +511,75 @@ export function getMarketplaceSearchUrl(marketplaceCode: string, query: string):
 // ----------------------------------------------------
 export function generateMockListingsLocally(category: string, query: string, specsToCompare: string[]) {
   const listings = [];
+  const lowerQuery = query.toLowerCase().trim();
   
-  // 1. Detect Brand from query
-  const lowerQuery = query.toLowerCase();
-  let brand = "Generic";
-  const brandsList = [
-    'apple', 'samsung', 'oneplus', 'xiaomi', 'google', 'sony', 'lg', 'dell', 'hp', 
-    'lenovo', 'asus', 'nike', 'adidas', 'puma', 'reebok', 'boat', 'noise', 'boult', 
-    'realme', 'oppo', 'vivo', 'mivi', 'motorola', 'jbl', 'bose', 'sennheiser'
+  // Popular Curated Catalogs for Generic Category Queries
+  const popularAudio = [
+    { brand: 'Apple', model: 'AirPods Pro (2nd Gen)', price: 24900 },
+    { brand: 'boAt', model: 'Airdopes 141', price: 1299 },
+    { brand: 'Sony', model: 'WH-1000XM4 Wireless', price: 19990 },
+    { brand: 'OnePlus', model: 'Buds Z2', price: 4999 },
+    { brand: 'JBL', model: 'C100SI Wired', price: 699 },
+    { brand: 'boAt', model: 'BassHeads 225', price: 599 },
+    { brand: 'Noise', model: 'Buds VS104', price: 1399 },
+    { brand: 'Boult', model: 'Z40 True Wireless', price: 1499 },
+    { brand: 'Bose', model: 'QuietComfort Ultra', price: 35900 },
+    { brand: 'Sennheiser', model: 'Accentum Wireless', price: 11990 },
+    { brand: 'Realme', model: 'Buds T300', price: 2299 },
+    { brand: 'Mivi', model: 'DuoPods K1', price: 999 }
   ];
-  const matchedBrand = brandsList.find(b => lowerQuery.includes(b));
-  if (matchedBrand) {
-    brand = matchedBrand.charAt(0).toUpperCase() + matchedBrand.slice(1);
-  } else {
-    // If no brand detected, use a default category brand
-    const categoryBrands: Record<string, string> = {
-      'smartphones': 'Apple',
-      'laptops': 'Apple',
-      'refrigerators': 'Samsung',
-      'washing machines': 'LG',
-      'smartwatches': 'Apple',
-      'wireless earbuds': 'Sony',
-      'earbuds': 'Sony',
-      'earphones': 'Sony',
-      'tvs': 'Sony',
-      'tv': 'Sony',
-      'shoes': 'Nike'
-    };
-    const key = Object.keys(categoryBrands).find(k => k.toLowerCase() === category.toLowerCase());
-    brand = key ? categoryBrands[key] : 'Generic';
-  }
 
-  // 2. Clean query name to get a realistic title
-  let cleanName = query;
-  cleanName = cleanName.split(/\s+/).map(word => {
-    if (word.toLowerCase().startsWith('iphone')) {
-      const numMatch = word.match(/\d+/);
-      return 'iPhone' + (numMatch ? ' ' + numMatch[0] : '');
-    }
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }).join(' ');
+  const popularPhones = [
+    { brand: 'Apple', model: 'iPhone 15 Pro Max', price: 144900 },
+    { brand: 'Samsung', model: 'Galaxy S24 Ultra', price: 129990 },
+    { brand: 'OnePlus', model: '12 5G', price: 64999 },
+    { brand: 'Google', model: 'Pixel 8 Pro', price: 93999 },
+    { brand: 'Xiaomi', model: 'Redmi Note 13 Pro', price: 25999 },
+    { brand: 'Motorola', model: 'Edge 50 Pro', price: 31999 },
+    { brand: 'Apple', model: 'iPhone 14 (128GB)', price: 59900 },
+    { brand: 'Samsung', model: 'Galaxy M34 5G', price: 15999 },
+    { brand: 'Realme', model: '12 Pro 5G', price: 23999 },
+    { brand: 'Vivo', model: 'V30 Pro', price: 41999 }
+  ];
+
+  const popularLaptops = [
+    { brand: 'Apple', model: 'MacBook Air M3 (13-inch)', price: 114900 },
+    { brand: 'HP', model: 'Victus Gaming 16', price: 65990 },
+    { brand: 'Dell', model: 'Inspiron 15', price: 47990 },
+    { brand: 'Asus', model: 'ROG Strix G16', price: 109990 },
+    { brand: 'Lenovo', model: 'IdeaPad Slim 3', price: 38990 },
+    { brand: 'Apple', model: 'MacBook Pro M3 Max', price: 349900 }
+  ];
+
+  const popularTVs = [
+    { brand: 'Sony', model: 'Bravia 55-inch 4K UHD', price: 57990 },
+    { brand: 'Samsung', model: 'Crystal 4K 43-inch', price: 29990 },
+    { brand: 'LG', model: 'OLED C3 65-inch', price: 189990 },
+    { brand: 'Xiaomi', model: 'Smart TV X 50-inch', price: 32990 },
+    { brand: 'OnePlus', model: 'Y1S 32-inch HD', price: 14999 }
+  ];
+
+  const genericKeywords = [
+    'earphone', 'earphones', 'headphone', 'headphones', 'earbud', 'earbuds', 
+    'phone', 'phones', 'mobile', 'mobiles', 'smartphone', 'smartphones',
+    'laptop', 'laptops', 'tv', 'tvs', 'television', 'televisions', 'wireless earbuds'
+  ];
+  
+  const queryWords = lowerQuery.split(/\s+/);
+  const isGenericQuery = queryWords.every(word => genericKeywords.includes(word));
+
+  const isAudio = lowerQuery.includes('earphone') || lowerQuery.includes('earbud') || lowerQuery.includes('headphone') || category.toLowerCase().includes('earbud') || category.toLowerCase().includes('earphone') || category.toLowerCase().includes('headphone');
+  const isPhone = lowerQuery.includes('phone') || lowerQuery.includes('mobile') || lowerQuery.includes('smartphone') || category.toLowerCase().includes('phone') || category.toLowerCase().includes('mobile') || category.toLowerCase().includes('smartphone');
+  const isLaptop = lowerQuery.includes('laptop') || lowerQuery.includes('macbook') || category.toLowerCase().includes('laptop') || category.toLowerCase().includes('macbook');
+  const isTV = lowerQuery.includes('tv') || lowerQuery.includes('television') || category.toLowerCase().includes('tv') || category.toLowerCase().includes('television');
+
+  let catalog: Array<{ brand: string, model: string, price: number }> = [];
+  if (isGenericQuery) {
+    if (isAudio) catalog = popularAudio;
+    else if (isPhone) catalog = popularPhones;
+    else if (isLaptop) catalog = popularLaptops;
+    else if (isTV) catalog = popularTVs;
+  }
 
   const marketNames = ['Amazon', 'Flipkart', 'Croma', 'Reliance Digital', 'Tata CLiQ', 'OLX'];
   const marketCodes = ['amazon', 'flipkart', 'croma', 'reliance', 'tatacliq', 'olx'];
@@ -568,16 +597,63 @@ export function generateMockListingsLocally(category: string, query: string, spe
     if (condition === 'USED') priceMultiplier = 0.75;
     else if (condition === 'REFURBISHED') priceMultiplier = 0.88;
     
-    // Base price guess based on category / query
+    let brand = "Generic";
+    let cleanName = query;
     let basePrice = 59999;
-    if (lowerQuery.includes('pro') || lowerQuery.includes('ultra') || lowerQuery.includes('max')) basePrice = 89999;
-    if (lowerQuery.includes('macbook') || lowerQuery.includes('laptop')) basePrice = 79999;
-    if (lowerQuery.includes('tv') || lowerQuery.includes('television')) basePrice = 39999;
-    if (lowerQuery.includes('earphones') || lowerQuery.includes('earbuds') || lowerQuery.includes('shoes')) basePrice = 5999;
+
+    if (catalog.length > 0) {
+      // Map to rotating popular models
+      const catalogItem = catalog[i % catalog.length];
+      brand = catalogItem.brand;
+      cleanName = catalogItem.model;
+      basePrice = catalogItem.price;
+    } else {
+      // Specific model query matching
+      const brandsList = [
+        'apple', 'samsung', 'oneplus', 'xiaomi', 'google', 'sony', 'lg', 'dell', 'hp', 
+        'lenovo', 'asus', 'nike', 'adidas', 'puma', 'reebok', 'boat', 'noise', 'boult', 
+        'realme', 'oppo', 'vivo', 'mivi', 'motorola', 'jbl', 'bose', 'sennheiser'
+      ];
+      const matchedBrand = brandsList.find(b => lowerQuery.includes(b));
+      if (matchedBrand) {
+        brand = matchedBrand.charAt(0).toUpperCase() + matchedBrand.slice(1);
+      } else {
+        const categoryBrands: Record<string, string> = {
+          'smartphones': 'Apple',
+          'laptops': 'Apple',
+          'refrigerators': 'Samsung',
+          'washing machines': 'LG',
+          'smartwatches': 'Apple',
+          'wireless earbuds': 'Sony',
+          'earbuds': 'Sony',
+          'earphones': 'Sony',
+          'tvs': 'Sony',
+          'tv': 'Sony',
+          'shoes': 'Nike'
+        };
+        const key = Object.keys(categoryBrands).find(k => k.toLowerCase() === category.toLowerCase());
+        brand = key ? categoryBrands[key] : 'Generic';
+      }
+
+      // Clean query name
+      cleanName = query.split(/\s+/).map(word => {
+        if (word.toLowerCase().startsWith('iphone')) {
+          const numMatch = word.match(/\d+/);
+          return 'iPhone' + (numMatch ? ' ' + numMatch[0] : '');
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+
+      // Base price guess
+      if (lowerQuery.includes('pro') || lowerQuery.includes('ultra') || lowerQuery.includes('max')) basePrice = 89999;
+      if (lowerQuery.includes('macbook') || lowerQuery.includes('laptop')) basePrice = 79999;
+      if (lowerQuery.includes('tv') || lowerQuery.includes('television')) basePrice = 39999;
+      if (lowerQuery.includes('earphones') || lowerQuery.includes('earbuds') || lowerQuery.includes('shoes')) basePrice = 5999;
+    }
     
     // Add variation to price
     const baseVal = basePrice * priceMultiplier;
-    const price = Math.round((baseVal + (i * 800) - (i % 3 * 2000)) / 100) * 100;
+    const price = Math.round((baseVal + (i * 80) - (i % 3 * 200)) / 100) * 100;
     
     const colors = ['Space Grey', 'Silver', 'Gold', 'Midnight Blue', 'Titanium'];
     const ramOptions = ['8 GB', '12 GB', '16 GB'];
@@ -591,28 +667,29 @@ export function generateMockListingsLocally(category: string, query: string, spe
     let title = baseTitle;
     
     // Append variations to make it realistic
-    if (category.toLowerCase() === 'smartphones' || category.toLowerCase() === 'laptops') {
+    if (isPhone || isLaptop) {
       title = `${baseTitle} (${storage}, ${color})`;
-    } else if (category.toLowerCase().includes('earbuds') || category.toLowerCase().includes('earphones')) {
-      title = `${baseTitle} True Wireless Earbuds (${color})`;
-    } else if (category.toLowerCase().includes('tv') || category.toLowerCase().includes('television')) {
-      const sizes = ['43"', '55"', '65"'];
-      title = `${brand} ${sizes[i % sizes.length]} UHD Smart TV`;
+    } else if (isAudio) {
+      title = `${baseTitle} (${color})`;
     }
 
     const deliveryFee = isUsed ? 150 : (i % 2 === 0 ? 0 : 99);
-    const discount = isUsed ? 0 : (i % 3 === 0 ? 500 : 0);
+    const discount = isUsed ? 0 : (i % 3 === 0 ? 100 : 0);
 
     const specs = specsToCompare.map(key => {
       let val = 'Standard';
       const kLower = key.toLowerCase();
-      if (kLower.includes('capacity')) val = `${250 + i * 5} Liters`;
+      if (kLower.includes('capacity') && !isAudio) val = `${250 + i * 5} Liters`;
       else if (kLower.includes('rating')) val = `${3 + (i % 3)} Star`;
       else if (kLower.includes('ram')) val = ram;
       else if (kLower.includes('storage')) val = storage;
       else if (kLower.includes('camera')) val = `${48 + (i % 3) * 12} MP`;
-      else if (kLower.includes('battery')) val = `${4000 + (i % 4) * 500} mAh`;
-      else if (kLower.includes('display')) val = category.toLowerCase() === 'laptops' ? '15.6" IPS' : '6.7" Super Retina';
+      else if (kLower.includes('battery life') || kLower.includes('playtime')) val = `${6 + (i % 4) * 6} Hours`;
+      else if (kLower.includes('battery') && !isAudio) val = `${4000 + (i % 4) * 500} mAh`;
+      else if (kLower.includes('driver')) val = `${8 + (i % 3) * 2} mm Dynamic`;
+      else if (kLower.includes('water') || kLower.includes('ip rating') || kLower.includes('ipx')) val = `IPX${4 + (i % 3)}`;
+      else if (kLower.includes('microphone') || kLower.includes('mic')) val = i % 2 === 0 ? 'Quad Mics with ENC' : 'Dual Mics with ANC';
+      else if (kLower.includes('display')) val = isLaptop ? '15.6" IPS' : '6.7" Super Retina';
       else if (kLower.includes('size')) val = 'Standard';
       return { key, value: val };
     });
