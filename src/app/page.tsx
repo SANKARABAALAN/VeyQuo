@@ -675,17 +675,7 @@ export default function Home() {
 
 
   const getProductImage = (title: string) => {
-    const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes('phone') || lowerTitle.includes('iphone')) {
-      return 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&q=80';
-    }
-    if (lowerTitle.includes('laptop') || lowerTitle.includes('macbook')) {
-      return 'https://images.unsplash.com/photo-1496181130204-7552cc14ac4b?w=300&q=80';
-    }
-    if (lowerTitle.includes('headphone') || lowerTitle.includes('earbud') || lowerTitle.includes('earphone')) {
-      return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80';
-    }
-    return 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=300&q=80';
+    return `/api/product-image?q=${encodeURIComponent(title)}`;
   };
 
   const getRetailerLogo = (code: string) => {
